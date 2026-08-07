@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>신규입사자 인재리포트 — 주목 인재</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --primary: #534AB7; --primary-dark: #3730A3; --primary-light: #EAE8F7;
+    --primary-mid: #7B74CF; --text: #1A1A2E; --text-sub: #5A5A7A;
+    --text-muted: #9090AA; --border: #E0DEFA; --bg: #F8F7FF; --white: #FFFFFF;
+    --green: #2DB87A; --green-light: #E6F7F1; --amber: #F59E0B; --amber-light: #FEF3C7;
+    --slate: #64748B; --slate-light: #F1F3F6;
+  }
+  body { font-family: 'Noto Sans KR', sans-serif; background: #EDEDF5; color: var(--text); font-size: 13px; line-height: 1.6; }
+
+  /* 인원 선택 네비게이션 */
+  .roster { width: 880px; margin: 0 auto; padding: 16px 0; display: flex; gap: 8px; position: sticky; top: 0; background: #EDEDF5; z-index: 10; }
+  .roster-item { flex: 1; background: var(--white); border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: all 0.15s; }
+  .roster-item:hover { border-color: var(--primary-mid); }
+  .roster-item { text-decoration:none; display:block; }
+  .roster-name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+  .roster-meta { font-size: 11px; color: var(--text-muted); }
+
+  .wrap { width: 880px; margin: 16px auto 40px; background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 16px rgba(83,74,183,0.08); }
+
+  .page-header { background: var(--primary); padding: 28px 36px 24px; display: flex; justify-content: space-between; align-items: flex-end; }
+  .doc-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: rgba(255,255,255,0.55); text-transform: uppercase; margin-bottom: 8px; }
+  .person-name { font-size: 26px; font-weight: 700; color: white; letter-spacing: -0.5px; margin-bottom: 4px; }
+  .person-meta { font-size: 13px; color: rgba(255,255,255,0.75); font-weight: 400; }
+  .page-header-right { text-align: right; }
+  .verdict-badge { display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; border-radius: 24px; background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,200,100,0.7); color: white; font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+  .verdict-dot { width: 7px; height: 7px; border-radius: 50%; background: #FFD966; }
+  .convert-date { font-size: 11px; color: rgba(255,255,255,0.65); }
+  .page-body { padding: 28px 36px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; }
+  .card.full { grid-column: 1 / -1; }
+  .card.reason { background: var(--primary-light); border: 1.5px solid var(--primary); }
+  .card.reason .card-title { color: var(--primary); }
+  .card-title { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--primary); text-transform: uppercase; margin-bottom: 14px; }
+  .overview-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+  .ov-label { font-size: 10px; color: var(--text-muted); margin-bottom: 3px; font-weight: 500; }
+  .ov-value { font-size: 13px; font-weight: 700; color: var(--text); }
+  .link-badges { display: flex; gap: 6px; margin-top: 5px; }
+  .link-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; text-decoration: none; background: var(--primary-light); color: var(--primary-dark); border: 1px solid var(--border); transition: background 0.15s; }
+  .link-badge:hover { background: var(--primary); color: white; }
+  .tag-group { margin-bottom: 12px; }
+  .tag-group:last-child { margin-bottom: 0; }
+  .tag-group-label { font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tag { padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 500; }
+  .tag.slate { background: var(--slate-light); color: var(--slate); }
+  .tag.blue { background: var(--primary-light); color: var(--primary-dark); }
+  .tag.green { background: var(--green-light); color: var(--green); }
+  .reason-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+  .reason-badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; background: var(--primary); color: white; }
+  .award-row { font-size: 12px; color: var(--text-sub); padding-top: 10px; border-top: 1px solid var(--border); }
+  .award-label { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .award-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .award-tag { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; background: var(--amber-light); color: #92400E; }
+  .eval-box { background: var(--white); border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; font-size: 12px; color: var(--text-sub); line-height: 1.7; }
+  .eval-box ul { list-style: none; }
+  .eval-box li { padding: 4px 0; }
+  .eval-box li::before { content: "· "; color: var(--primary); font-weight: 700; }
+  .eval-sub { font-size: 11px; font-weight: 700; color: var(--primary-dark); margin: 10px 0 4px; }
+  .eval-sub:first-child { margin-top: 0; }
+  .eval-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 1px 8px; border-radius: 8px; margin-right: 6px; }
+  .eval-tag.strength { background: var(--green-light); color: var(--green); }
+  .eval-tag.growth { background: var(--amber-light); color: #92400E; }
+  .exp-list { list-style: none; }
+  .exp-list li { display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 12px; align-items: flex-start; }
+  .exp-list li:last-child { border-bottom: none; }
+  .exp-cat { flex-shrink: 0; width: 130px; font-weight: 700; color: var(--text-muted); font-size: 11px; padding-top: 1px; }
+  .exp-period { flex-shrink: 0; width: 90px; color: var(--text-muted); font-size: 11px; padding-top: 1px; }
+  .exp-desc { color: var(--text-sub); line-height: 1.45; }
+  .card.people-opinion { background: #F0FDF4; border: 1.5px solid #86EFAC; }
+  .card.people-opinion .card-title { color: #166534; }
+  .people-opinion-list { list-style: none; background: white; border-radius: 6px; padding: 10px 14px; border: 1px solid #BBF7D0; }
+  .people-opinion-list li { display: flex; gap: 8px; padding: 5px 0; font-size: 12px; color: var(--text-sub); line-height: 1.55; align-items: flex-start; }
+  .people-opinion-list li::before { content: "⭐"; flex-shrink: 0; font-size: 10px; padding-top: 2px; }
+  .attach-reco-row { margin-top:14px; padding-top:12px; border-top:1px solid var(--border); display:grid; grid-template-columns:200px 1fr; gap:20px; }
+  .reco-box { text-align:left; }
+  .reco-text { font-size:12px; font-weight:700; color:var(--primary-dark); line-height:1.55; }
+  .reco-list { list-style:none; padding:0; margin:0; }
+  .reco-list li { font-size:12px; font-weight:700; color:var(--primary-dark); line-height:1.55; padding-left:14px; position:relative; margin-bottom:4px; }
+  .reco-list li::before { content:"•"; position:absolute; left:0; color:var(--primary); font-weight:700; }
+  .reco-list li:last-child { margin-bottom:0; }
+  .work-intro { font-size:12px; color:var(--text-sub); margin-bottom:10px; }
+  .current-work-list { list-style:none; }
+  .current-work-list li { padding:4px 0; font-size:12px; color:var(--text-sub); }
+  .current-work-list li::before { content:"· "; color:#0F766E; font-weight:700; }
+  .current-work-list li a { color:#0F766E; font-weight:600; text-decoration:none; border-bottom:1px dashed #99D5CE; }
+  .current-work-list li a:hover { border-color:#0F766E; }
+  .work-project { margin-bottom:12px; padding-bottom:12px; border-bottom:1px dashed #99D5CE; }
+  .work-project:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+  .work-project-title { font-size:11.5px; font-weight:700; color:#0F766E; margin-bottom:6px; }
+  .work-field { font-size:12px; color:var(--text-sub); margin-bottom:3px; line-height:1.5; }
+  .work-field b { color:var(--text); font-weight:700; }
+  .work-field a { color:#0F766E; font-weight:600; text-decoration:none; border-bottom:1px dashed #99D5CE; }
+  .work-field a:hover { border-color:#0F766E; }
+  .card.current-work { background:#EFFBF9; border:1.5px solid #0F766E; }
+  .card.current-work .card-title { color:#0F766E; }
+  @media print { .roster { display: none; } .wrap { margin: 0; border-radius: 0; box-shadow: none; } body { background: white; } }
+</style>
+</head>
+<body>
+
+<div class="roster" id="roster"></div>
+
+<!-- 김민서H -->
+<div class="wrap" id="person-0">
+  <div class="page-header">
+    <div>
+      <div class="doc-label">신규입사자 인재리포트 · 2026 · 2월 입사</div>
+      <div class="person-name">김민서H</div>
+      <div class="person-meta">세마리토끼 기획 1팀 · AE / 신입 · 숙명여자대학교</div>
+    </div>
+    <div class="page-header-right">
+      <div class="verdict-badge"><span class="verdict-dot"></span>⭐ 주목 인재</div>
+      <div class="convert-date">Core Identity · Problem Solver</div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="card full">
+      <div class="card-title">대상자 개요</div>
+      <div class="overview-grid">
+        <div><div class="ov-label">학교</div><div class="ov-value">숙명여자대학교</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px;">미디어학부</div></div>
+        <div><div class="ov-label">입사월</div><div class="ov-value">2026.02</div></div>
+        <div><div class="ov-label">채용구분</div><div class="ov-value">신입 (AE)</div></div>
+        <div><div class="ov-label">소속</div><div class="ov-value">세마리토끼 기획 1팀</div></div>
+        <div>
+          <div class="ov-label">참여 프로젝트</div>
+          <div class="ov-value">스포티파이</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">이전 소속 · 삼양애니</div>
+        </div>
+      </div>
+      <div class="attach-reco-row">
+        <div>
+          <div class="ov-label" style="margin-bottom:6px;">첨부 자료</div>
+          <div class="link-badges">
+            <a class="link-badge" href="https://drive.google.com/file/d/11wMoGv7aNSEbDTbKKjLta9QiiAl3XWzA/view?usp=sharing" target="_blank">📄 이력서</a>
+            <a class="link-badge" href="https://drive.google.com/file/d/1qIcJu3rQGJ-t02NCQzUqYUsFkUsXAXlE/view?usp=sharing" target="_blank">🖼️ 포트폴리오</a>
+          </div>
+        </div>
+        <div class="reco-box">
+          <div class="ov-label" style="margin-bottom:6px;">핵심 추천사유</div>
+          <ul class="reco-list">
+            <li>K-pop 관련 숏폼 콘텐츠 운영이 본인 관심사와 잘 맞아 성과가 좋다는 리더 평가</li>
+            <li>영어 커뮤니케이션 능력과 최신 영상 트렌드에 대한 이해도가 높은 인력으로 확인</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card full current-work">
+      <div class="card-title">현재 작업물</div>
+      <div class="work-intro">스포티파이 · 인스타그램 콘텐츠 기획 및 운영 담당</div>
+      <ul class="current-work-list">
+        <li><a href="https://www.instagram.com/p/DZ98T93hHle/" target="_blank">캔트비블루 소셜 콘텐츠 [사랑한다?안한다?]</a></li>
+        <li><a href="https://www.instagram.com/reel/DXg7jgSkyXk/" target="_blank">T1 홈그라운드 엔믹스 콘텐츠</a></li>
+      </ul>
+    </div>
+
+    <div class="card reason">
+      <div class="card-title">Core Identity</div>
+      <div class="reason-row"><span class="reason-badge">🧩 Problem Solver</span></div>
+      <div class="award-row">
+        <div class="award-label">수상</div>
+        <div class="award-tags">
+          <span class="award-tag">🏆 장애인인식개선교육 콘텐츠 공모전 대상</span>
+          <span class="award-tag">🏆 역전할머니맥주 UCC 공모전 장려상</span>
+          <span class="award-tag">🏆 국기원 태권도 콘텐츠 공모전 장려상</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">경력 · Skills · Culture Fit</div>
+      <div class="tag-group">
+        <div class="tag-group-label">경력</div>
+        <div class="tags"><span class="tag slate">영상에디터</span><span class="tag slate">뉴스영상PD</span><span class="tag slate">영상편집</span></div>
+      </div>
+      <div class="tag-group">
+        <div class="tag-group-label">Skills</div>
+        <div class="tags"><span class="tag blue">영어커뮤니케이션</span><span class="tag blue">숏폼기획제작</span></div>
+      </div>
+      <div class="tag-group">
+        <div class="tag-group-label">Culture Fit</div>
+        <div class="tags"><span class="tag green">아이디어구체화</span><span class="tag green">유연한대응력</span><span class="tag green">문제파악</span></div>
+      </div>
+    </div>
+    <div class="card full">
+      <div class="card-title">이력서 · 포트폴리오 주요 경험</div>
+      <ul class="exp-list">
+        <li><span class="exp-cat">삼양애니 · 프리랜서 PD</span><span class="exp-period">'25.01~'25.11</span><span class="exp-desc">삼양 브랜디드 콘텐츠 기획, BYOB 시즌3 조연출</span></li>
+        <li><span class="exp-cat">SBS · 인턴</span><span class="exp-period">'23.03~'24.03</span><span class="exp-desc">뉴스브리핑 영상 싱크 프리뷰·TC체크, 큐카드·프롬프터 준비</span></li>
+        <li><span class="exp-cat">CJ ENM · 영상에디터</span><span class="exp-period">'21.02~'21.06</span><span class="exp-desc">미국인 대상 영상채널 기획, 벌크·매쉬업 영상 제작</span></li>
+        <li><span class="exp-cat">어학·자격</span><span class="exp-period"></span><span class="exp-desc">TOEIC 935 · OPIc IH · 컴활 1급</span></li>
+      </ul>
+    </div>
+
+    <div class="card full people-opinion">
+      <div class="card-title">피플 의견</div>
+      <ul class="people-opinion-list">
+        <li>영어 커뮤니케이션 능력을 갖추었으며, 최신 영상 트렌드에 대한 이해도가 높음</li>
+        <li>폭넓은 영상 제작 및 BTL 팝업 기획 역량을 갖추었으며, 위기 상황에서도 주도적으로 돌파구를 찾는 문제 해결 능력이 탁월함</li>
+        <li>긍정적이고 강한 책임감을 바탕으로 현장을 민첩하게 리딩하며, '좋은 팀'을 지향하는 태도로 조직 내 건강한 소통과 시너지를 확산시킬 것으로 기대됨</li>
+      </ul>
+    </div>
+
+    <div class="card full">
+      <div class="card-title">리더 평가 의견</div>
+      <div class="eval-box">
+        <ul>
+          <li>신입사원다운 열정으로 즐겁게 업무에 임하고 있고, 또래가 많아 조직 적응도 빨랐음</li>
+          <li>콘텐츠 제작 중심 업무와 K-pop 관련 숏폼 콘텐츠 운영이 본인 관심사와 잘 맞아 성과가 좋음 — 다른 유형 과업에서의 성과는 아직 미확인</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 이시아 -->
+<div class="wrap" id="person-1">
+  <div class="page-header">
+    <div>
+      <div class="doc-label">신규입사자 인재리포트 · 2026 · 2월 입사</div>
+      <div class="person-name">이시아</div>
+      <div class="person-meta">세마리토끼 기획 1팀 3셀 · AE / 신입 · 숭실대학교</div>
+    </div>
+    <div class="page-header-right">
+      <div class="verdict-badge"><span class="verdict-dot"></span>⭐ 주목 인재</div>
+      <div class="convert-date">Core Identity · Problem Solver</div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="card full">
+      <div class="card-title">대상자 개요</div>
+      <div class="overview-grid">
+        <div><div class="ov-label">학교</div><div class="ov-value">숭실대학교</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px;">경영학부</div></div>
+        <div><div class="ov-label">입사월</div><div class="ov-value">2026.02</div></div>
+        <div><div class="ov-label">채용구분</div><div class="ov-value">신입 (AE)</div></div>
+        <div><div class="ov-label">소속</div><div class="ov-value">세마리토끼 기획 1팀 3셀</div></div>
+        <div>
+          <div class="ov-label">참여 프로젝트</div>
+          <div class="ov-value">SMC WAVE 파워계정</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">이전 소속 · (인턴) 카카오</div>
+        </div>
+      </div>
+      <div class="attach-reco-row">
+        <div>
+          <div class="ov-label" style="margin-bottom:6px;">첨부 자료</div>
+          <div class="link-badges">
+            <a class="link-badge" href="https://drive.google.com/file/d/1FVEMlFkcMXMxUadc0PhbnXiFBzFuIuTp/view?usp=sharing" target="_blank">📄 이력서</a>
+            <a class="link-badge" href="https://drive.google.com/file/d/1YdTOxXImhssPk6aC_LOBDON2uOsIUSRg/view?usp=sharing" target="_blank">🖼️ 포트폴리오</a>
+          </div>
+        </div>
+        <div class="reco-box">
+          <div class="ov-label" style="margin-bottom:6px;">핵심 추천사유</div>
+          <ul class="reco-list">
+            <li>소프트랜딩 활동에서 밝은 에너지가 눈에 띈 인원</li>
+            <li>팀 내에서 가장 열정적이고, 성장 의지가 강해 업무 외 시간까지 투자하며 노력하는 인원</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card full current-work">
+      <div class="card-title">현재 작업물</div>
+      <div class="work-intro">SMC WAVE 파워계정 운영 (샤라웃푸드 · 모를만두 · 마감요정 · 낋 담당)</div>
+      <ul class="current-work-list">
+        <li><a href="https://www.instagram.com/trend__mandu/" target="_blank">모를만두</a></li>
+        <li><a href="https://www.instagram.com/magam__yojung/" target="_blank">마감요정</a></li>
+      </ul>
+    </div>
+
+    <div class="card reason">
+      <div class="card-title">Core Identity</div>
+      <div class="reason-row"><span class="reason-badge">🧩 Problem Solver</span></div>
+      <div class="award-row">
+        <div class="award-label">수상</div>
+        <div class="award-tags">
+          <span class="award-tag">🏆 LG소셜캠퍼스 1분1초 영화제 3등</span>
+          <span class="award-tag">🏆 브론즈필름상</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">경력 · Skills · Culture Fit</div>
+      <div class="tag-group">
+        <div class="tag-group-label">경력</div>
+        <div class="tags"><span class="tag slate">카카오 인턴</span><span class="tag slate">웹툰 IP</span><span class="tag slate">밈 아카이빙</span></div>
+      </div>
+      <div class="tag-group">
+        <div class="tag-group-label">Skills</div>
+        <div class="tags"><span class="tag blue">트렌드서칭</span><span class="tag blue">숏폼제작</span><span class="tag blue">AI활용력</span></div>
+      </div>
+      <div class="tag-group">
+        <div class="tag-group-label">Culture Fit</div>
+        <div class="tags"><span class="tag green">변수대응력</span><span class="tag green">구조적해결</span><span class="tag green">문제원인파악</span></div>
+      </div>
+    </div>
+    <div class="card full">
+      <div class="card-title">이력서 · 포트폴리오 주요 경험</div>
+      <ul class="exp-list">
+        <li><span class="exp-cat">네이버웹툰 · 인턴</span><span class="exp-period">'24.07~'24.10</span><span class="exp-desc">웹툰 IP 기반 숏폼 콘텐츠 기획·제작, CBT 데이터 분석</span></li>
+        <li><span class="exp-cat">카카오 · 인턴</span><span class="exp-period">'23.04~'24.01</span><span class="exp-desc">4,400여 명 대상 사내 캠페인·행사 기획, 사내게시판 콘텐츠 제작</span></li>
+        <li><span class="exp-cat">바이트랩 · 인턴</span><span class="exp-period">'21.09~'21.12</span><span class="exp-desc">FBIG 광고 콘텐츠 제작, 데이터 기반 USP 도출</span></li>
+        <li><span class="exp-cat">자격</span><span class="exp-period"></span><span class="exp-desc">OPIc IH · GAIQ · GTQ 1급 · ACA Premiere Pro</span></li>
+      </ul>
+    </div>
+
+    <div class="card full people-opinion">
+      <div class="card-title">피플 의견</div>
+      <ul class="people-opinion-list">
+        <li>피플 소프트랜딩 진행 시 가장 인상적이고 밝은 에너지를 보여주었으며, 팀 내 에너지를 높이고 활발한 대화를 이끌어내는 등 동료들에게 긍정적인 시너지를 전파할 수 있는 인재로 보임</li>
+        <li>상황 및 업무의 맥락을 빠르게 파악하며, 밝은 태도로 주도적으로 업무를 몰입해서 즐기는 성향을 지님</li>
+        <li>주어진 과업 외에도 자발적으로 리포트를 정리하고 적극적으로 의견을 개진하는 등 높은 진정성이 보임</li>
+        <li>다수의 툴 활용에 능숙하여 짧은 시간 내에 다수의 콘텐츠를 제작할 수 있는 탁월한 속도를 보유함</li>
+      </ul>
+    </div>
+
+    <div class="card full">
+      <div class="card-title">리더 평가 의견</div>
+      <div class="eval-box">
+        <ul>
+          <li>팀 내에서 가장 열정적인 편으로, 정규직 전환에 대한 의지가 뚜렷함</li>
+          <li>AE와 제작자는 성향이 다르다고 보는데, 이시아님은 다소 제작자에 가까운 성향</li>
+          <li>성장 의지가 강해 업무 외 시간까지 투자하는 편</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 박다솔 -->
+<div class="wrap" id="person-2">
+  <div class="page-header">
+    <div>
+      <div class="doc-label">신규입사자 인재리포트 · 2026 · 5월 입사</div>
+      <div class="person-name">박다솔</div>
+      <div class="person-meta">공공사업본부 3팀 · AE / 경력 7.4년 · 한성대학교</div>
+    </div>
+    <div class="page-header-right">
+      <div class="verdict-badge"><span class="verdict-dot"></span>⭐ 주목 인재</div>
+      <div class="convert-date">Core Identity · Problem Solver</div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="card full">
+      <div class="card-title">대상자 개요</div>
+      <div class="overview-grid">
+        <div><div class="ov-label">학교</div><div class="ov-value">한성대학교</div></div>
+        <div><div class="ov-label">입사월</div><div class="ov-value">2026.05</div></div>
+        <div><div class="ov-label">채용구분</div><div class="ov-value">경력 7.4년 (AE)</div></div>
+        <div><div class="ov-label">소속</div><div class="ov-value">공공사업본부 3팀</div></div>
+        <div>
+          <div class="ov-label">참여 프로젝트</div>
+          <div class="ov-value">국가철도공단 · 지역문화진흥원 · 통일부</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">이전 소속 · 스미스</div>
+        </div>
+      </div>
+      <div class="attach-reco-row">
+        <div>
+          <div class="ov-label" style="margin-bottom:6px;">첨부 자료</div>
+          <div class="link-badges">
+            <a class="link-badge" href="https://drive.google.com/file/d/1EYst1rdgd0joDcMDwBRWj65j1mzIEGkf/view?usp=sharing" target="_blank">📄 이력서</a>
+            <a class="link-badge" href="https://drive.google.com/file/d/1XJ2p5iQnQS_B5B-4nsDqoZLlnvPOHkkL/view?usp=sharing" target="_blank">🖼️ 포트폴리오</a>
+          </div>
+        </div>
+        <div class="reco-box">
+          <div class="ov-label" style="margin-bottom:6px;">핵심 추천사유</div>
+          <ul class="reco-list">
+            <li>이전 직장에서 굵직한 프로젝트를 이끈 실행력이 강점인 인원</li>
+            <li>파트장으로서의 경험도 보유하고 있어 중간관리자로서 긍정적인 시너지가 기대됨</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card full current-work">
+      <div class="card-title">현재 작업물</div>
+      <div class="work-project">
+        <div class="work-project-title">1. 통일부</div>
+        <div class="work-field"><b>채널</b> · <a href="https://www.instagram.com/ministry_of_unification/" target="_blank">@ministry_of_unification</a></div>
+        <div class="work-field"><b>업무</b> · 채널 운영 및 콘텐츠 전반 기획, 제작</div>
+        <div class="work-field"><b>파일 참고</b> · 캠페인 진행을 위한 구성 초안 작성</div>
+      </div>
+      <div class="work-project">
+        <div class="work-project-title">2. 국가철도공단</div>
+        <div class="work-field"><b>채널</b> · <a href="https://www.instagram.com/railstargram/" target="_blank">@railstargram</a></div>
+        <div class="work-field"><b>업무</b> · 밈 활용 임플로이언서 영상 콘텐츠 기획 및 제작</div>
+        <div class="work-field"><b>콘텐츠 링크</b> · <a href="https://www.instagram.com/reel/DamtmqcGpMQ/?utm_source=ig_web_copy_link&amp;igsh=MzRlODBiNWFlZA==" target="_blank">릴스 1</a> · <a href="https://www.instagram.com/reel/Day8WKXExyx/?utm_source=ig_web_copy_link&amp;igsh=MzRlODBiNWFlZA==" target="_blank">릴스 2</a></div>
+      </div>
+    </div>
+
+    <div class="card reason">
+      <div class="card-title">Core Identity</div>
+      <div class="reason-row"><span class="reason-badge">🧩 Problem Solver</span></div>
+      <div class="award-row">
+        <div class="award-label">수상</div>
+        해당 없음
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">경력 · Skills · Culture Fit</div>
+      <div class="tag-group">
+        <div class="tag-group-label">경력</div>
+        <div class="tags"><span class="tag slate">목표초과달성트랙</span><span class="tag slate">콘텐츠제작</span><span class="tag slate">대규모캠페인실행자</span></div>
+      </div>
+      <div class="tag-group">
+        <div class="tag-group-label">Skills</div>
+        <div class="tags"><span class="tag blue">성과증명자</span><span class="tag blue">성과정량화</span><span class="tag blue">멀티포맷통합제작</span></div>
+      </div>
+      <div class="tag-group">
+        <div class="tag-group-label">Culture Fit</div>
+        <div class="tags"><span class="tag green">프로젝트리더</span><span class="tag green">책임감</span><span class="tag green">클라이언트소통</span></div>
+      </div>
+    </div>
+
+    <div class="card full">
+      <div class="card-title">이력서 · 포트폴리오 주요 경험</div>
+      <ul class="exp-list">
+        <li><span class="exp-cat">스미스(주) · 파트장</span><span class="exp-period">'22.05~재직중</span><span class="exp-desc">IMC 마케팅 프로젝트 PM</span></li>
+        <li><span class="exp-cat">유니벌유즈 · 프리랜서</span><span class="exp-period">'21.06~'22.05</span><span class="exp-desc">TVCF·영화 [롱디] VFX 참여</span></li>
+        <li><span class="exp-cat">파인닥터 · 팀원</span><span class="exp-period">'18.02~'21.06</span><span class="exp-desc">의료마케팅 바이럴·웹이미지 제작, 홍보영상 기획·촬영·편집</span></li>
+        <li><span class="exp-cat">네이버 · 인턴</span><span class="exp-period">'15.12~'16.03</span><span class="exp-desc">농촌 블로그 활성화 TF — 영상 기획·촬영·편집</span></li>
+        <li><span class="exp-cat">스킬</span><span class="exp-period"></span><span class="exp-desc">Adobe Premiere Pro(상) · After Effects(상) · Photoshop/Illustrator(중)</span></li>
+      </ul>
+    </div>
+
+    <div class="card full people-opinion">
+      <div class="card-title">피플 의견</div>
+      <ul class="people-opinion-list">
+        <li>높은 회복탄력성과 빠른 상황 판단력을 바탕으로 예상치 못한 어려움 속에서도 주도적으로 돌파구를 찾아 문제를 해결해내는 실행력을 갖춤</li>
+        <li>TVCF 기획 및 유명 브랜드 팝업 등 굵직한 프로젝트를 성공적으로 이끌어온 자기주도형 인재로, 특유의 긍정적인 책임감과 민첩한 현장 리딩 능력을 통해 조직에 빠르게 안착하여 뛰어난 성과를 창출할 것으로 기대됨</li>
+        <li>동료의 의견을 적극적으로 수용하고 소통을 즐기는 성향을 지녀 '좋은 팀을 만들고 싶다'는 뚜렷한 목표 의식을 바탕으로 중간관리자로서 조직 내 건강하고 긍정적인 시너지를 확산시킬 인재로 보임</li>
+      </ul>
+    </div>
+
+    <div class="card full">
+      <div class="card-title">리더 평가 의견</div>
+      <div class="eval-box">
+        <div class="eval-sub">1. 업무 적응 상황</div>
+        <ul>
+          <li>초기 여러 프로젝트에 동시 투입되며 일시적으로 혼선이 있었으나, 핵심 사업 1~2개로 집중 재조정한 뒤 본인만의 방식으로 운영 계획·프로세스 기획을 안정적으로 구축해가는 중</li>
+          <li>전임자 부재와 인수인계 공백 속에 투입돼 초기 적응에 어려움이 있었지만, 현재는 부서·사업 방향성을 명확히 이해하고 주기적 면담을 통해 안정적으로 적응 중</li>
+        </ul>
+        <div class="eval-sub">2. 보유 강점 및 향후 기대 역할</div>
+        <ul>
+          <li><span class="eval-tag strength">강점</span>사업 구조를 빠르게 파악해 비효율을 개선하고 최적 운영안을 제안하는 적극성</li>
+          <li><span class="eval-tag strength">기대</span>전담 실무자가 배정되면 조직 정체성을 유지하면서도 본인만의 리더십·운영 체계를 구축할 것으로 기대</li>
+          <li><span class="eval-tag strength">강점</span>영상·디자인 실무 역량을 보유해 클라이언트 요구에 즉각 대응하고, 외주 제작사도 디테일하게 핸들링 가능</li>
+          <li><span class="eval-tag growth">보완</span>모든 실무를 직접 해결하려는 성향은 지양하고, 적절히 실무를 분배해 중간관리자 역량을 극대화할 필요</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const people = [
+    { name: '김민서H', meta: '숙명여자대학교 · 신입' },
+    { name: '이시아', meta: '숭실대학교 · 신입' },
+    { name: '박다솔', meta: '한성대학교 · 경력 7.4년' }
+  ];
+
+  const roster = document.getElementById('roster');
+  people.forEach((p, i) => {
+    const el = document.createElement('a');
+    el.className = 'roster-item';
+    el.href = '#person-' + i;
+    el.innerHTML = `<div class="roster-name">${p.name}</div><div class="roster-meta">${p.meta}</div>`;
+    roster.appendChild(el);
+  });
+</script>
+
+</body>
+</html>
