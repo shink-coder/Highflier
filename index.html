@@ -1,1364 +1,243 @@
-<title>채용 TO 리뷰 아젠다</title>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>CMO 채용 방향 및 운영안 | The SMC</title>
 <style>
-  :root {
-    --ink:        #121b2a;
-    --ink-soft:   #3d4b60;
-    --ink-faint:  #7b8a9d;
-    --paper:      #fbfcfe;
-    --surface:    #ffffff;
-    --line:       #d7dfea;
-    --line-soft:  #e7edf5;
-    --accent:     #14549b;
-    --accent-dim: #e3ecf8;
-    --alert:      #a8382a;
-    --alert-dim:  #f7e3df;
-    --hold:       #8a6412;
-    --hold-dim:   #f5ecd6;
-    --shadow:     0 1px 2px rgba(18,27,42,.06), 0 10px 26px -18px rgba(18,27,42,.32);
-
-    --display: "Noto Sans KR", -apple-system, "Malgun Gothic", sans-serif;
-    --body: "Noto Sans KR", -apple-system, "Malgun Gothic", sans-serif;
-    --mono: "IBM Plex Mono", "Noto Sans KR", monospace;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --ink:        #e6ecf4;
-      --ink-soft:   #a5b3c6;
-      --ink-faint:  #74839a;
-      --paper:      #0c1219;
-      --surface:    #141d29;
-      --line:       #2a3646;
-      --line-soft:  #212c3a;
-      --accent:     #7cb2ef;
-      --accent-dim: #17293e;
-      --alert:      #e8907a;
-      --alert-dim:  #3a201a;
-      --hold:       #d9b558;
-      --hold-dim:   #33290f;
-      --shadow:     0 1px 2px rgba(0,0,0,.4), 0 10px 30px -18px rgba(0,0,0,.8);
-    }
-  }
-  :root[data-theme="dark"] {
-    --ink:        #e6ecf4;
-    --ink-soft:   #a5b3c6;
-    --ink-faint:  #74839a;
-    --paper:      #0c1219;
-    --surface:    #141d29;
-    --line:       #2a3646;
-    --line-soft:  #212c3a;
-    --accent:     #7cb2ef;
-    --accent-dim: #17293e;
-    --alert:      #e8907a;
-    --alert-dim:  #3a201a;
-    --hold:       #d9b558;
-    --hold-dim:   #33290f;
-    --shadow:     0 1px 2px rgba(0,0,0,.4), 0 10px 30px -18px rgba(0,0,0,.8);
-  }
-
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: var(--body);
-    font-size: 15px;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  /* ---------- deck shell ---------- */
-  .deck {
-    height: 100svh;
-    min-height: 560px;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    overflow: hidden;
-  }
-
-  .topbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 14px clamp(20px, 4vw, 56px);
-    border-bottom: 1px solid var(--line);
-    background: var(--surface);
-  }
-  .brand {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-    min-width: 0;
-  }
-  .brand b {
-    font-family: var(--display);
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: -.02em;
-    white-space: nowrap;
-  }
-  .brand span {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    white-space: nowrap;
-  }
-  .badges { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-  .badge {
-    font-family: var(--mono);
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: .06em;
-    padding: 4px 9px;
-    border-radius: 3px;
-    white-space: nowrap;
-  }
-  .badge.date { background: var(--accent); color: var(--surface); }
-  .badge.who  { background: var(--accent-dim); color: var(--accent); }
-  .badge.ver  { background: transparent; color: var(--ink-faint); border: 1px solid var(--line); }
-
-  /* ---------- horizontal track ---------- */
-  .viewport { position: relative; overflow: hidden; }
-  .track {
-    display: flex;
-    height: 100%;
-    transition: transform .52s cubic-bezier(.3,.72,.24,1);
-    will-change: transform;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .track { transition: none; }
-  }
-  .slide {
-    flex: 0 0 100%;
-    height: 100%;
-    overflow-y: auto;
-    padding: clamp(22px, 3.4vh, 40px) clamp(20px, 4vw, 56px) 40px;
-    scrollbar-width: thin;
-  }
-  .slide-inner { max-width: 1180px; margin: 0 auto; }
-
-  /* ---------- slide heading ---------- */
-  .eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 10px;
-  }
-  .eyebrow i {
-    display: block;
-    width: 22px;
-    height: 1px;
-    background: var(--accent);
-    opacity: .5;
-  }
-  h1 {
-    font-family: var(--display);
-    font-weight: 700;
-    font-size: clamp(28px, 4.4vw, 44px);
-    line-height: 1.24;
-    letter-spacing: -.03em;
-    margin: 0 0 10px;
-    text-wrap: balance;
-  }
-  h2 {
-    font-family: var(--display);
-    font-weight: 700;
-    font-size: clamp(21px, 2.4vw, 28px);
-    line-height: 1.3;
-    letter-spacing: -.025em;
-    margin: 0 0 6px;
-    text-wrap: balance;
-  }
-  .dek {
-    font-size: 15px;
-    color: var(--ink-soft);
-    max-width: 62ch;
-    margin: 0 0 clamp(18px, 2.6vh, 28px);
-  }
-  .rule { height: 1px; background: var(--line); border: 0; margin: 0 0 22px; }
-
-  h3 {
-    font-family: var(--mono);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    margin: 0 0 12px;
-  }
-
-  /* ---------- generic pieces ---------- */
-  .grid { display: grid; gap: 16px; }
-  .g2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
-  .g3 { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
-  .stack { display: flex; flex-direction: column; gap: 14px; }
-
-  .panel {
-    background: var(--surface);
-    border: 1px solid var(--line-soft);
-    border-radius: 6px;
-    padding: 18px 20px;
-  }
-  .panel.lift { box-shadow: var(--shadow); }
-  .panel.flag { border-left: 3px solid var(--accent); }
-  .panel.flag-alert { border-left: 3px solid var(--alert); }
-  .panel.flag-hold { border-left: 3px solid var(--hold); }
-  .panel > :last-child { margin-bottom: 0; }
-
-  ul.plain, ul.tick { margin: 0; padding: 0; list-style: none; }
-  ul.tick li {
-    position: relative;
-    padding-left: 16px;
-    margin-bottom: 7px;
-  }
-  ul.tick li:last-child { margin-bottom: 0; }
-  ul.tick li::before {
-    content: "";
-    position: absolute;
-    left: 0; top: .62em;
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: var(--accent);
-    opacity: .65;
-  }
-  ul.tick.q li::before { border-radius: 1px; background: var(--ink-faint); }
-  ul.tick li b { font-weight: 700; }
-  .sub {
-    margin: 6px 0 0;
-    padding-left: 0;
-    list-style: none;
-    font-size: 14px;
-    color: var(--ink-soft);
-  }
-  .sub li { position: relative; padding-left: 13px; margin-bottom: 4px; }
-  .sub li::before {
-    content: "–";
-    position: absolute; left: 0; top: 0;
-    color: var(--ink-faint);
-  }
-
-  .kv { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; align-items: baseline; }
-  .kv dt {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    padding-top: 2px;
-  }
-  .kv dd { margin: 0; }
-
-  .tag {
-    display: inline-block;
-    font-family: var(--mono);
-    font-size: 10.5px;
-    font-weight: 500;
-    letter-spacing: .07em;
-    padding: 2px 7px;
-    border-radius: 3px;
-    background: var(--accent-dim);
-    color: var(--accent);
-    vertical-align: 2px;
-  }
-  .tag.alert { background: var(--alert-dim); color: var(--alert); }
-  .tag.hold  { background: var(--hold-dim);  color: var(--hold); }
-  .tag.mute  { background: transparent; color: var(--ink-faint); border: 1px solid var(--line); }
-
-  .num {
-    font-family: var(--mono);
-    font-variant-numeric: tabular-nums;
-    font-weight: 600;
-  }
-
-  .table-wrap { overflow-x: auto; border: 1px solid var(--line-soft); border-radius: 6px; background: var(--surface); }
-  table { width: 100%; border-collapse: collapse; font-size: 14px; }
-  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line-soft); }
-  th {
-    font-family: var(--mono);
-    font-size: 10.5px;
-    font-weight: 600;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    background: var(--paper);
-  }
-  tbody tr:last-child td { border-bottom: 0; }
-  td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
-  th.n { text-align: right; }
-  .blank { color: var(--ink-faint); }
-
-  a.cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    background: var(--accent);
-    color: var(--surface);
-    font-weight: 700;
-    font-size: 14px;
-    padding: 11px 18px;
-    border-radius: 5px;
-  }
-  a.cta span.url {
-    font-family: var(--mono);
-    font-weight: 400;
-    font-size: 11.5px;
-    opacity: .75;
-  }
-  a.cta:hover { filter: brightness(1.08); }
-  a.cta:focus-visible, button:focus-visible, .dot:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 3px;
-  }
-
-  /* ---------- timeline rail ---------- */
-  .rail { display: grid; gap: 0; }
-  .rail .step {
-    display: grid;
-    grid-template-columns: 78px 1fr;
-    gap: 14px;
-    padding-bottom: 14px;
-    position: relative;
-  }
-  .rail .step:not(:last-child)::before {
-    content: "";
-    position: absolute;
-    left: 82px; top: 14px; bottom: 0;
-    width: 1px;
-    background: var(--line);
-  }
-  .rail .when {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: .04em;
-    color: var(--ink-faint);
-    text-align: right;
-    padding-top: 3px;
-    white-space: nowrap;
-  }
-  .rail .what { position: relative; padding-left: 18px; }
-  .rail .what::before {
-    content: "";
-    position: absolute;
-    left: -4.5px; top: 6px;
-    width: 9px; height: 9px;
-    border-radius: 50%;
-    background: var(--surface);
-    border: 2px solid var(--accent);
-    z-index: 1;
-  }
-  .rail .step.is-stop .what::before { border-color: var(--alert); background: var(--alert); }
-  .rail .step.is-next .what::before { border-color: var(--line); }
-  .rail .what b { display: block; font-weight: 700; }
-  .rail .what small { display: block; color: var(--ink-soft); font-size: 13.5px; }
-
-  /* ---------- cover ---------- */
-  .cover {
-    display: grid;
-    grid-template-columns: minmax(280px, 1.05fr) minmax(260px, .95fr);
-    gap: clamp(24px, 5vw, 64px);
-    align-items: center;
-    min-height: 100%;
-  }
-  .cover .lede { font-size: 16px; color: var(--ink-soft); max-width: 40ch; }
-  .cover ol {
-    margin: 0; padding: 0; list-style: none;
-    border-top: 1px solid var(--line);
-  }
-  .cover ol li {
-    display: grid;
-    grid-template-columns: 34px 1fr auto;
-    gap: 14px;
-    align-items: baseline;
-    padding: 15px 2px;
-    border-bottom: 1px solid var(--line);
-  }
-  .cover ol li i {
-    font-family: var(--mono);
-    font-style: normal;
-    font-size: 12px;
-    color: var(--accent);
-    font-weight: 600;
-  }
-  .cover ol li strong { font-weight: 700; font-size: 15.5px; letter-spacing: -.015em; }
-  .cover ol li em {
-    display: block;
-    font-style: normal;
-    font-size: 13.5px;
-    color: var(--ink-soft);
-    margin-top: 2px;
-  }
-  @media (max-width: 760px) {
-    .cover { grid-template-columns: 1fr; align-items: start; padding-top: 6px; }
-  }
-
-  /* ---------- profile cards ---------- */
-  .prof { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; }
-  .prof .panel { display: flex; flex-direction: column; gap: 10px; }
-  .prof h4 {
-    margin: 0;
-    font-family: var(--display);
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: -.01em;
-  }
-  .prof .who { font-size: 13.5px; color: var(--ink-soft); margin: 0; }
-  .prof dl { margin: 0; }
-
-  /* ---------- decisions ---------- */
-  .dec { counter-reset: d; display: grid; gap: 12px; }
-  .dec .item {
-    display: grid;
-    grid-template-columns: 30px 1fr;
-    gap: 14px;
-    background: var(--surface);
-    border: 1px solid var(--line-soft);
-    border-radius: 6px;
-    padding: 15px 18px;
-  }
-  .dec .item::before {
-    counter-increment: d;
-    content: counter(d, decimal-leading-zero);
-    font-family: var(--mono);
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--accent);
-    padding-top: 3px;
-  }
-  .dec b { display: block; font-weight: 700; margin-bottom: 3px; }
-  .dec small { color: var(--ink-soft); font-size: 13.5px; }
-
-  /* ---------- process flow ---------- */
-  .flow-wrap { overflow-x: auto; padding-bottom: 6px; }
-  .flow {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(186px, 1fr));
-    gap: 20px 20px;
-    min-width: 1030px;
-    align-items: stretch;
-  }
-  .flow .phase.row-end::after { display: none; }
-  .phase {
-    position: relative;
-    background: var(--surface);
-    border: 1px solid var(--line-soft);
-    border-top: 3px solid var(--line);
-    border-radius: 5px;
-    padding: 13px 15px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
-  }
-  .phase .ph-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-  }
-  .phase .gate-tag {
-    font-family: var(--mono);
-    font-size: 9.5px;
-    font-weight: 600;
-    letter-spacing: .1em;
-    padding: 2px 6px;
-    border-radius: 99px;
-    background: var(--accent);
-    color: var(--surface);
-    white-space: nowrap;
-  }
-  .phase.gate { border-top-color: var(--accent); }
-  .phase.gate h4 { color: var(--ink); }
-  .phase.ceo {
-    border-top-color: var(--accent);
-    background: var(--accent-dim);
-    border-color: var(--accent-dim);
-  }
-  .phase.ceo ol li::before { background: var(--surface); }
-  .phase:not(:last-child)::after {
-    content: "";
-    position: absolute;
-    right: -13px; top: 50%;
-    width: 8px; height: 8px;
-    border-top: 1.5px solid var(--line);
-    border-right: 1.5px solid var(--line);
-    transform: translateY(-50%) rotate(45deg);
-  }
-  .phase .ph-no {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: .16em;
-    color: var(--ink-faint);
-  }
-  .phase.gate .ph-no, .phase.ceo .ph-no { color: var(--accent); }
-  .phase h4 {
-    margin: -4px 0 0;
-    font-family: var(--display);
-    font-size: 16.5px;
-    font-weight: 700;
-    letter-spacing: -.02em;
-    line-height: 1.3;
-  }
-  .phase ol {
-    counter-reset: st;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 7px;
-  }
-  .phase ol li {
-    position: relative;
-    padding-left: 21px;
-    font-size: 13px;
-    line-height: 1.45;
-  }
-  .phase ol li::before {
-    counter-increment: st;
-    content: counter(st);
-    position: absolute;
-    left: 0; top: 1px;
-    width: 15px; height: 15px;
-    border-radius: 50%;
-    background: var(--accent-dim);
-    color: var(--accent);
-    font-family: var(--mono);
-    font-size: 9.5px;
-    font-weight: 600;
-    display: grid;
-    place-items: center;
-  }
-  .phase ol li small { display: block; color: var(--ink-faint); font-size: 11.5px; }
-  .phase .owner {
-    margin-top: auto;
-    padding-top: 9px;
-    border-top: 1px dashed var(--line);
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: .07em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-  }
-  .phase .owner b { color: var(--ink-soft); font-weight: 600; }
-  .phase .way-tag {
-    font-family: var(--mono);
-    font-size: 9.5px;
-    font-weight: 600;
-    letter-spacing: .1em;
-    padding: 2px 6px;
-    border-radius: 99px;
-    background: var(--paper);
-    color: var(--ink-soft);
-    border: 1px solid var(--line);
-  }
-  .twoway { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
-  .twoway .way {
-    border: 1px solid var(--line-soft);
-    border-radius: 4px;
-    padding: 7px 9px;
-    font-size: 12.5px;
-    line-height: 1.35;
-  }
-  .twoway .way b {
-    display: block;
-    font-family: var(--mono);
-    font-size: 9.5px;
-    font-weight: 600;
-    letter-spacing: .1em;
-    color: var(--accent);
-    margin-bottom: 3px;
-  }
-  .twoway .way small { display: block; font-size: 11px; color: var(--ink-faint); }
-  .merge {
-    position: relative;
-    text-align: center;
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: .1em;
-    color: var(--ink-faint);
-    padding: 12px 0 4px;
-  }
-  .merge::before {
-    content: "";
-    position: absolute;
-    left: 25%; right: 25%; top: 4px;
-    height: 6px;
-    border-left: 1px solid var(--line);
-    border-right: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    border-radius: 0 0 4px 4px;
-  }
-  .handoff {
-    background: var(--paper);
-    border: 1px solid var(--line-soft);
-    border-radius: 4px;
-    padding: 8px 10px;
-    font-size: 12.5px;
-    line-height: 1.4;
-  }
-  .handoff b { font-weight: 700; }
-
-  .phase .more {
-    appearance: none;
-    align-self: flex-start;
-    background: transparent;
-    border: 1px solid var(--line);
-    color: var(--accent);
-    font-family: var(--mono);
-    font-size: 10.5px;
-    font-weight: 500;
-    letter-spacing: .06em;
-    padding: 4px 9px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  .phase .more:hover { border-color: var(--accent); background: var(--accent-dim); }
-  .phase .more:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-  /* ---------- 상세 시트 ---------- */
-  .sheet {
-    position: fixed;
-    inset: 0;
-    z-index: 50;
-    display: grid;
-    place-items: center;
-    padding: clamp(16px, 4vw, 48px);
-  }
-  .sheet[hidden] { display: none; }
-  .sheet-back {
-    position: absolute;
-    inset: 0;
-    background: rgba(18, 27, 42, .42);
-    backdrop-filter: blur(2px);
-  }
-  .sheet-panel {
-    position: relative;
-    width: min(860px, 100%);
-    max-height: 86vh;
-    overflow-y: auto;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    box-shadow: 0 24px 60px -20px rgba(18, 27, 42, .45);
-    padding: clamp(22px, 3vw, 34px);
-    animation: sheet-in .22s cubic-bezier(.3,.72,.24,1);
-  }
-  @keyframes sheet-in {
-    from { opacity: 0; transform: scale(.97) translateY(6px); }
-    to   { opacity: 1; transform: none; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .sheet-panel { animation: none; }
-  }
-  .sheet-x {
-    appearance: none;
-    position: absolute;
-    top: 14px; right: 14px;
-    width: 30px; height: 30px;
-    border: 1px solid var(--line);
-    border-radius: 5px;
-    background: var(--paper);
-    color: var(--ink-soft);
-    font-size: 13px;
-    line-height: 1;
-    cursor: pointer;
-  }
-  .sheet-x:hover { border-color: var(--accent); color: var(--accent); }
-  .sheet-body h2 { font-size: clamp(20px, 2.2vw, 26px); margin-bottom: 4px; }
-  .sheet-body .dek { margin-bottom: 20px; }
-
-  .phase.wide { grid-column: span 2; }
-  .panel.optional-jd { border-style: dashed; background: transparent; }
-  .phase.optional {
-    border-style: dashed;
-    border-top-style: solid;
-    background: transparent;
-  }
-  .mini {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px 18px;
-    border-top: 1px dashed var(--line);
-    padding-top: 10px;
-    margin-top: 2px;
-  }
-  .mini > div { font-size: 12px; line-height: 1.45; color: var(--ink-soft); }
-  .mini em {
-    display: block;
-    font-style: normal;
-    font-family: var(--mono);
-    font-size: 9.5px;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    margin-bottom: 3px;
-  }
-
-  .phase .chips { display: flex; flex-wrap: wrap; gap: 4px; }
-  .phase .chips span {
-    font-size: 10.5px;
-    font-family: var(--mono);
-    letter-spacing: .02em;
-    padding: 2px 6px;
-    border-radius: 3px;
-    background: var(--paper);
-    color: var(--ink-soft);
-    border: 1px solid var(--line-soft);
-  }
-  .phase a.sample {
-    font-size: 11.5px;
-    color: var(--accent);
-    text-decoration: none;
-    border-bottom: 1px dotted var(--accent);
-    align-self: flex-start;
-  }
-  .phase a.sample:hover { border-bottom-style: solid; }
-  .phase.principles {
-    border-top: 3px solid var(--line);
-    border-style: dashed;
-    border-top-style: solid;
-    background: transparent;
-  }
-  .phase.principles h4 { font-family: var(--body); font-size: 13px; }
-  .phase.principles .ph-no { color: var(--ink-faint); }
-  .phase.principles ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 7px; }
-  .phase.principles li {
-    position: relative;
-    padding-left: 12px;
-    font-size: 12.5px;
-    line-height: 1.45;
-    color: var(--ink-soft);
-  }
-  .phase.principles li::before {
-    content: "";
-    position: absolute;
-    left: 0; top: .6em;
-    width: 4px; height: 4px;
-    border-radius: 50%;
-    background: var(--ink-faint);
-  }
-
-  /* ---------- TO 현황 ---------- */
-  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
-  .tile {
-    background: var(--surface);
-    border: 1px solid var(--line-soft);
-    border-radius: 6px;
-    padding: 13px 16px;
-  }
-  .tile .lab {
-    font-family: var(--mono);
-    font-size: 10.5px;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    display: block;
-    margin-bottom: 4px;
-  }
-  .tile .big {
-    font-family: var(--mono);
-    font-variant-numeric: tabular-nums;
-    font-size: 27px;
-    font-weight: 600;
-    letter-spacing: -.02em;
-    line-height: 1.1;
-  }
-  .tile .big em {
-    font-style: normal;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--ink-faint);
-    margin-left: 3px;
-  }
-  .tile.key .big { color: var(--accent); }
-  .tile .leaving {
-    color: var(--hold);
-    font-size: 12.5px;
-    font-weight: 500;
-    letter-spacing: 0;
-    white-space: nowrap;
-  }
-
-  .statline {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 8px 28px;
-    padding: 13px 20px;
-  }
-  .statline .stat { display: inline-flex; align-items: baseline; gap: 9px; }
-  .statline .stat em {
-    font-style: normal;
-    font-family: var(--mono);
-    font-size: 10.5px;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-  }
-  .statline .stat b {
-    font-family: var(--mono);
-    font-variant-numeric: tabular-nums;
-    font-size: 19px;
-    font-weight: 600;
-    letter-spacing: -.01em;
-  }
-  .statline .stat b.key { color: var(--accent); }
-  .statline .msg { font-size: 13.5px; color: var(--ink-soft); margin-left: auto; }
-
-  table.to td, table.to th { padding: 7px 12px; }
-  table.to td.dept { font-size: 13.5px; }
-  table.to td .out { color: var(--hold); font-size: 12px; margin-left: 3px; }
-  .bar {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    justify-content: flex-end;
-    width: 100%;
-  }
-  .bar .track {
-    width: 42px;
-    height: 5px;
-    border-radius: 4px;
-    background: var(--line-soft);
-    overflow: hidden;
-  }
-  .bar .track i { display: block; height: 100%; border-radius: 4px; background: var(--accent); }
-  .bar .v { min-width: 12px; text-align: right; font-weight: 600; }
-  .bar.zero .v { color: var(--ink-faint); font-weight: 400; }
-
-  .note {
-    font-size: 12.5px;
-    color: var(--ink-faint);
-    font-family: var(--mono);
-    letter-spacing: .01em;
-  }
-
-  /* ---------- bottom nav ---------- */
-  .navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 14px;
-    padding: 10px clamp(20px, 4vw, 56px);
-    border-top: 1px solid var(--line);
-    background: var(--surface);
-  }
-  .dots { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-  .dot {
-    appearance: none;
-    border: 0;
-    background: var(--line);
-    height: 4px;
-    width: 26px;
-    border-radius: 99px;
-    padding: 0;
-    cursor: pointer;
-    transition: background .2s, width .2s;
-  }
-  .dot[aria-current="true"] { background: var(--accent); width: 46px; }
-  .dot:hover { background: var(--ink-faint); }
-  .navmeta {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-family: var(--mono);
-    font-size: 11.5px;
-    color: var(--ink-faint);
-    letter-spacing: .06em;
-    white-space: nowrap;
-  }
-  .arrows { display: flex; gap: 6px; }
-  .arrows button {
-    appearance: none;
-    cursor: pointer;
-    background: var(--paper);
-    border: 1px solid var(--line);
-    color: var(--ink);
-    border-radius: 5px;
-    width: 34px; height: 30px;
-    font-size: 14px;
-    line-height: 1;
-    display: grid;
-    place-items: center;
-  }
-  .arrows button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
-  .arrows button:disabled { opacity: .35; cursor: default; }
-  .slidename { display: none; }
-  @media (min-width: 900px) { .slidename { display: inline; } }
+:root{--ink:#111;--sub:#62666d;--line:#e5e7eb;--bg:#f4f6f8;--card:#fff;--blue:#2563eb;--blue2:#eff6ff;--navy:#13233d;--mint:#0f766e;--orange:#c2410c;--red:#b91c1c;--green:#15803d}
+*{box-sizing:border-box}html,body{margin:0;height:100%;font-family:Pretendard,"Noto Sans KR","Apple SD Gothic Neo",Arial,sans-serif;color:var(--ink);background:#111;overflow:hidden}
+button{font:inherit}.deck{height:100vh;position:relative}.slide{position:absolute;inset:0;background:var(--bg);padding:48px 60px 42px;opacity:0;pointer-events:none;transform:translateX(30px);transition:.32s ease;overflow:auto}.slide.active{opacity:1;pointer-events:auto;transform:translateX(0)}
+.top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px}.kicker{font-size:12px;letter-spacing:.18em;font-weight:800;color:var(--blue);text-transform:uppercase}.title{font-size:35px;line-height:1.16;margin:7px 0 0;letter-spacing:-.04em}.subtitle{margin:10px 0 0;color:var(--sub);font-size:15px;line-height:1.6}.page{font-size:12px;font-weight:800;color:#9aa0a6;letter-spacing:.12em}.brand{font-size:12px;font-weight:900;color:#111;letter-spacing:.08em}
+.grid{display:grid;gap:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 8px 24px rgba(15,23,42,.045)}
+/* page1 */
+.p1-layout{display:grid;grid-template-columns:1.05fr 1.6fr;gap:24px;align-items:stretch}.north{display:flex;flex-direction:column;justify-content:space-between;background:var(--navy);color:#fff;border-radius:22px;padding:28px;min-height:480px}.north .mini{font-size:12px;letter-spacing:.14em;color:#adc4ff;font-weight:800}.north h2{font-size:32px;line-height:1.2;margin:14px 0 14px;letter-spacing:-.04em}.north p{color:#d9e3f4;line-height:1.65;margin:0;font-size:15px}.north .goal{border-top:1px solid rgba(255,255,255,.18);padding-top:18px;margin-top:26px}.north .goal b{display:block;font-size:18px;margin-bottom:7px}.axis-wrap{display:flex;flex-direction:column;gap:15px}.axis{display:grid;grid-template-columns:1fr 70px 1fr;gap:10px;align-items:stretch}.axis-card{border-radius:18px;padding:23px;border:1px solid var(--line);background:#fff}.axis-card .tag{font-size:11px;letter-spacing:.12em;font-weight:900;color:#6b7280}.axis-card h3{font-size:23px;margin:7px 0 10px;letter-spacing:-.03em}.axis-card p{color:#62666d;line-height:1.55;margin:0;font-size:14px}.plus{display:flex;align-items:center;justify-content:center;font-size:26px;color:#9ca3af;font-weight:300}.cmo-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.cmo{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px}.cmo .n{font-size:11px;font-weight:900;letter-spacing:.12em}.cmo h4{font-size:19px;margin:8px 0 8px}.cmo p{font-size:13px;color:#62666d;line-height:1.5;margin:0}.cmo.imc{border-top:4px solid #2563eb}.cmo.pr{border-top:4px solid #0f766e}.cmo.data{border-top:4px solid #c2410c}.bridge{background:#111;color:#fff;border-radius:15px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:15px}.bridge b{font-size:15px}.bridge span{font-size:13px;color:#d1d5db}.pillbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.pill{background:#f3f4f6;border:1px solid #e5e7eb;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:700;color:#4b5563}
+/* page2 */
+.jdgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.jd{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}.jd-head{padding:20px 20px 17px}.jd .ey{font-size:10px;letter-spacing:.13em;font-weight:900;color:#7b8189}.jd h3{font-size:23px;margin:6px 0 9px;letter-spacing:-.035em}.jd .catch{font-size:16px;font-weight:750;line-height:1.45;margin:0 0 14px}.jd .who{font-size:13px;line-height:1.55;color:#62666d;margin:0}.jd .headlines{padding:0 20px 18px}.headline{display:flex;gap:9px;font-size:13px;line-height:1.4;margin:9px 0}.dot{width:6px;height:6px;border-radius:50%;background:#111;flex:0 0 auto;margin-top:6px}.toggle{margin-top:auto;border:0;border-top:1px solid var(--line);background:#fafafa;padding:13px 18px;text-align:left;font-weight:800;cursor:pointer;display:flex;justify-content:space-between}.detail{max-height:0;overflow:hidden;transition:max-height .35s ease;background:#fcfcfd}.detail.open{max-height:680px}.detail-inner{padding:17px 20px 22px;border-top:1px dashed #e5e7eb}.detail h5{font-size:12px;margin:0 0 8px;color:#4b5563}.detail ul{margin:0 0 15px;padding-left:18px}.detail li{font-size:12.5px;line-height:1.55;margin:5px 0;color:#444}.outcome{font-size:12.5px;background:#f7f7f8;border-radius:10px;padding:11px 12px;line-height:1.5}.common{margin-top:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.common div{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}.common b{display:block;font-size:12px;margin-bottom:4px}.common span{font-size:11.5px;color:#6b7280;line-height:1.45}.jd.imc{border-top:4px solid #2563eb}.jd.pr{border-top:4px solid #0f766e}.jd.data{border-top:4px solid #c2410c}
+/* page3 */
+.ops{display:grid;grid-template-columns:1.25fr .95fr;gap:22px}.channel-stack{display:grid;gap:12px}.channel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 19px;display:grid;grid-template-columns:140px 1fr auto;align-items:center;gap:16px}.channel .name{font-size:18px;font-weight:900}.badge{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:800}.basic{background:#ecfdf5;color:#166534}.paid{background:#eff6ff;color:#1d4ed8}.decision{background:#fff7ed;color:#9a3412}.direct{background:#f3e8ff;color:#7e22ce}.channel p{font-size:13px;color:#5f6368;line-height:1.5;margin:0}.channel .cost{text-align:right;font-size:13px;font-weight:900;white-space:nowrap}.channel .cost strong{display:block;font-size:20px;color:#111;margin-top:3px}.channel.optional{background:#f1eee6;border:1px solid #aaa08f;border-left:3px solid #6f685e}.channel.optional .name{font-size:17px}.channel.optional p{color:#5f5a52}.channel.optional .cost strong{font-size:19px}.channel.optional .decision{background:#ded8cc;color:#403b34}.decision-box{background:#111;color:#fff;border-radius:20px;padding:23px}.decision-box .ey{font-size:11px;letter-spacing:.13em;color:#c7d2fe;font-weight:900}.decision-box h3{font-size:25px;margin:8px 0 14px;line-height:1.28}.money{display:grid;gap:10px}.money-row{background:#1b1b1b;border:1px solid #323232;border-radius:12px;padding:14px}.money-row span{font-size:11px;color:#aaa}.money-row b{display:block;font-size:24px;margin-top:4px}.money-row small{color:#aaa}.ask{margin-top:16px;background:#f59e0b;color:#111;border-radius:12px;padding:13px 14px;font-size:13px;line-height:1.5;font-weight:800}.flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:15px}.flow span{background:#fff;border:1px solid var(--line);padding:8px 11px;border-radius:999px;font-size:11px;font-weight:800}.flow i{font-style:normal;color:#aaa}.note{margin-top:13px;font-size:11.5px;color:#7a7f87}.highlight{color:#2563eb}
+.nav{position:fixed;right:26px;bottom:22px;display:flex;gap:8px;z-index:20}.nav button{border:0;border-radius:999px;width:38px;height:38px;background:#111;color:#fff;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.18)}.dots{position:fixed;left:50%;bottom:27px;transform:translateX(-50%);display:flex;gap:7px;z-index:20}.dots button{width:8px;height:8px;border-radius:50%;border:0;background:#c7cbd1;padding:0;cursor:pointer}.dots button.active{background:#111;transform:scale(1.2)}
+@media(max-width:1000px){html,body{overflow:auto}.slide{position:relative;display:none;height:auto;min-height:100vh;padding:30px 22px 80px}.slide.active{display:block}.p1-layout,.ops,.jdgrid{grid-template-columns:1fr}.axis{grid-template-columns:1fr}.plus{display:none}.cmo-row,.common{grid-template-columns:1fr}.channel{grid-template-columns:1fr}.channel .cost{text-align:left}.nav,.dots{position:fixed}}
 </style>
 
+<style id="ceo-style-override">
+:root{--ink:#111111;--ivory:#FCFCFB;--paper:#FFFFFF;--dark-2:#1F1E1D;--dark-3:#30302E;--gray-1:#424242;--gray-2:#8B8B8B;--gray-3:#CACACA;--line-light:rgba(17,17,17,.13);--line-dark:rgba(255,255,255,.16);--font-en:Inter,"Helvetica Neue",Arial,Pretendard,sans-serif;--font-ko:Inter,"Helvetica Neue",Arial,Pretendard,-apple-system,sans-serif}
+*{box-sizing:border-box;font-synthesis:none}
+html{background:var(--ivory)}
+body{background:var(--ivory);color:var(--ink);font-family:var(--font-ko);font-weight:400;letter-spacing:-.01em}
+.slide{background:var(--ivory);padding:42px 54px 62px}
+.slide::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent calc(100% - 1px),rgba(17,17,17,.035) 1px);background-size:12.5% 100%;opacity:.35}
+.slide>*{position:relative;z-index:1}
+.slide[data-slide="0"]{background:var(--ink);color:var(--ivory)}
+.slide[data-slide="0"]::after{content:"";position:absolute;right:-2%;top:0;width:48%;height:100%;opacity:.34;background:repeating-linear-gradient(135deg,transparent 0 18px,#30302e 18px 19px);pointer-events:none}
+.top{align-items:flex-start;padding-bottom:22px;border-bottom:1px solid var(--line-light);margin-bottom:32px}
+.slide[data-slide="0"] .top{border-color:var(--line-dark)}
+.kicker,.brand,.page,.mini,.axis-card .tag,.cmo .n,.jd .ey,.decision-box .ey{font-family:var(--font-en);font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.kicker{font-size:11px;color:var(--gray-2);margin-bottom:15px}.slide[data-slide="0"] .kicker{color:var(--gray-3)}
+.brand{font-size:11px;color:var(--gray-2);text-align:right}.slide[data-slide="0"] .brand{color:var(--gray-3)}
+.page{margin-top:12px;font-size:12px;color:var(--gray-2);text-align:right}.slide[data-slide="0"] .page{color:var(--gray-3)}
+.title{font-family:var(--font-en);font-size:clamp(34px,4.2vw,64px);font-weight:500;line-height:1.05;letter-spacing:-.045em;margin:0}
+.subtitle{font-size:15px;line-height:1.65;color:var(--gray-1);max-width:760px;margin-top:14px}.slide[data-slide="0"] .subtitle{color:var(--gray-3)}
+/* page 1 */
+.p1-layout{grid-template-columns:.82fr 1.45fr;gap:58px}
+.north{background:transparent;border:0;border-radius:0;padding:0 38px 0 0;border-right:1px solid var(--line-dark);justify-content:space-between}
+.north .mini{font-size:11px;color:var(--gray-3);margin-bottom:20px}
+.north h2{font-size:31px;line-height:1.28;letter-spacing:-.035em;font-weight:600;margin:0 0 18px}.north p{font-size:14px;line-height:1.75;color:var(--gray-3)}
+.north .goal{border-top:1px solid var(--line-dark);padding-top:20px;margin-top:34px}.north .goal b{font-family:var(--font-en);font-size:20px;font-weight:500;letter-spacing:-.02em}.north .goal p{margin-top:8px}
+.axis-wrap{gap:0}
+.axis{grid-template-columns:1fr 50px 1fr;gap:0;border-top:1px solid var(--line-dark);border-bottom:1px solid var(--line-dark)}
+.axis-card{border:0;border-radius:0;background:transparent;padding:26px 22px 28px 0}.axis-card:last-child{padding-left:22px;border-left:1px solid var(--line-dark)}
+.axis-card .tag{font-size:10px;color:var(--gray-3)}.axis-card h3{font-size:27px;font-weight:500;margin:10px 0 12px}.axis-card p{font-size:13px;color:var(--gray-3);line-height:1.65}.axis-card p b{color:var(--ivory);font-weight:500}
+.plus{font-size:22px;color:var(--gray-2);border-left:1px solid var(--line-dark);display:flex;align-items:center;justify-content:center}
+.bridge{margin:0;border-radius:0;background:transparent;border-bottom:1px solid var(--line-dark);padding:16px 0;color:var(--ivory)}.bridge b{font-size:13px;font-weight:500}.bridge span{font-size:12px;color:var(--gray-3)}
+.cmo-row{gap:0;border-bottom:1px solid var(--line-dark)}
+.cmo{background:transparent;border:0;border-radius:0;padding:23px 20px 25px 0}.cmo+.cmo{border-left:1px solid var(--line-dark);padding-left:20px}.cmo.imc,.cmo.pr,.cmo.data{border-top:0}.cmo .n{font-size:10px;color:var(--gray-3)}.cmo h4{font-family:var(--font-en);font-size:23px;font-weight:500;margin:9px 0 10px}.cmo p{font-size:12.5px;color:var(--gray-3);line-height:1.62}
+.pillbar{margin-top:18px;gap:16px}.pill{background:transparent;border:0;border-radius:0;padding:0;font-size:11px;color:var(--gray-3);font-weight:500}.pill:before{content:"■";font-size:6px;margin-right:8px;vertical-align:2px}
+/* page 2 */
+.jdgrid{gap:0;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+.jd{border:0;border-radius:0;background:transparent;overflow:visible}.jd+.jd{border-left:1px solid var(--line-light)}.jd.imc,.jd.pr,.jd.data{border-top:0}
+.jd-head{padding:27px 24px 18px}.jd .ey{font-size:10px;color:var(--gray-2)}.jd h3{font-family:var(--font-en);font-size:35px;font-weight:400;letter-spacing:-.04em;margin:9px 0 14px}.jd .catch{font-size:18px;line-height:1.5;font-weight:600;margin-bottom:18px}.jd .who{border-top:1px solid var(--line-light);padding-top:14px;font-size:12.5px;line-height:1.65;color:var(--gray-1)}
+.jd .headlines{padding:0 24px 22px}.headline{border-top:1px solid var(--line-light);padding-top:10px;margin:10px 0 0;font-size:12.5px;line-height:1.5}.dot{width:5px;height:5px;border-radius:0;background:var(--ink)}
+.toggle{border-top:1px solid var(--ink);background:transparent;padding:14px 24px;font-family:var(--font-en);font-size:12px;font-weight:600;letter-spacing:.03em}.toggle:hover{background:#f5f5f2}
+.detail{background:#fff}.detail-inner{padding:20px 24px 24px;border-top:1px solid var(--line-light)}.detail h5{font-family:var(--font-en);font-size:11px;letter-spacing:.08em;text-transform:uppercase}.detail li{font-size:12px;line-height:1.65}.outcome{border-radius:0;background:var(--ivory);border-left:2px solid var(--ink);padding:12px 14px}
+.common{margin-top:18px;gap:0;border-top:1px solid var(--ink);border-bottom:1px solid var(--line-light)}.common div{border:0;border-radius:0;background:transparent;padding:15px 16px 15px 0}.common div+div{border-left:1px solid var(--line-light);padding-left:16px}.common b{font-size:11px;font-family:var(--font-en);text-transform:uppercase;letter-spacing:.06em}.common span{font-size:11px}
+/* page3 */
+.ops{grid-template-columns:1.35fr .85fr;gap:42px}.channel-stack{gap:0;border-top:1px solid var(--ink)}
+.channel{border:0;border-radius:0;background:transparent;padding:19px 16px;grid-template-columns:125px 1fr 120px;border-bottom:1px solid var(--line-light)}.channel .name{font-family:var(--font-en);font-size:21px;font-weight:500}.badge{border-radius:0;background:transparent!important;padding:0;font-family:var(--font-en);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-2)!important}.channel p{font-size:12.5px;line-height:1.65;color:var(--gray-1)}.channel .cost{font-size:11px;font-weight:500}.channel .cost strong{font-family:var(--font-en);font-size:24px;font-weight:500;letter-spacing:-.025em}
+.decision-box{border-radius:0;background:var(--ink);padding:30px;color:var(--ivory);position:relative;overflow:hidden}.decision-box:after{content:"";position:absolute;right:-30px;bottom:-50px;width:210px;height:210px;background:repeating-linear-gradient(135deg,transparent 0 12px,#30302e 12px 13px);opacity:.7}.decision-box>*{position:relative;z-index:1}.decision-box .ey{font-size:10px;color:var(--gray-3)}.decision-box h3{font-family:var(--font-en);font-size:31px;font-weight:500;letter-spacing:-.035em}.money{gap:0;border-top:1px solid var(--line-dark)}.money-row{background:transparent;border:0;border-radius:0;padding:15px 0;border-bottom:1px solid var(--line-dark)}.money-row span,.money-row small{color:var(--gray-3)}.money-row b{font-family:var(--font-en);font-size:31px;font-weight:400;letter-spacing:-.035em}.ask{border-radius:0;background:var(--ivory);color:var(--ink);font-size:12px;padding:13px 14px;font-weight:600}
+.flow{gap:0;margin-top:20px;border-top:1px solid var(--ink);border-bottom:1px solid var(--line-light)}.flow span{border:0;border-radius:0;background:transparent;padding:12px 15px;font-size:11px;font-weight:600}.flow span:first-child{padding-left:0}.flow i{padding:0 4px;color:var(--gray-2)}.note{font-size:11px;color:var(--gray-2)}.highlight{color:inherit;text-decoration:underline;text-underline-offset:3px}
+
+/* compact offer summary + target example */
+.offer-strip{margin-top:16px;border-top:1px solid var(--ink);border-bottom:1px solid var(--line-light);display:grid;grid-template-columns:1fr 1.35fr 1.25fr;gap:0}
+.offer-item{padding:12px 14px 11px 0;display:flex;align-items:baseline;gap:10px}
+.offer-item+.offer-item{border-left:1px solid var(--line-light);padding-left:14px}
+.offer-item .label{font-family:var(--font-en);font-size:9px;letter-spacing:.12em;color:var(--gray-2);font-weight:700}
+.offer-item strong{font-size:12px;font-weight:700;letter-spacing:-.02em}
+.target-example{margin-top:14px;padding:12px 13px;border:1px solid var(--ink);background:#f3f1ea}
+.target-example .label{display:block;font-family:var(--font-en);font-size:9px;letter-spacing:.12em;color:var(--gray-2);font-weight:700;margin-bottom:6px}
+.target-example p{font-size:11px;line-height:1.55;margin:0;color:var(--ink);font-weight:600;letter-spacing:-.02em}
+@media(max-width:1000px){.offer-strip{grid-template-columns:1fr}.offer-item+.offer-item{border-left:0;border-top:1px solid var(--line-light);padding-left:0}}
+
+/* nav */
+.nav{right:24px;bottom:20px}.nav button{width:36px;height:36px;border-radius:0;background:var(--ink);box-shadow:none;border:1px solid var(--ink)}.nav button:hover{background:var(--ivory);color:var(--ink)}
+.dots{bottom:27px}.dots button{width:18px;height:2px;border-radius:0;background:#c8c8c4}.dots button.active{background:var(--ink);transform:none}.slide[data-slide="0"]~*{}
+@media(max-width:1000px){.slide{padding:28px 22px 74px}.north{border-right:0;border-bottom:1px solid var(--line-dark);padding:0 0 24px}.axis{grid-template-columns:1fr}.plus{display:none}.axis-card:last-child{border-left:0;border-top:1px solid var(--line-dark);padding-left:0}.cmo+.cmo{border-left:0;border-top:1px solid var(--line-dark);padding-left:0}.jd+.jd{border-left:0;border-top:1px solid var(--ink)}.common div+div{border-left:0;border-top:1px solid var(--line-light);padding-left:0}.channel{grid-template-columns:1fr}.ops{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
 <div class="deck">
-  <header class="topbar">
-    <div class="brand">
-      <b>피플팀 아젠다</b>
-      <span>People Team</span>
+  <section class="slide active" data-slide="0">
+    <div class="top"><div><div class="kicker">CMO RECRUITING DIRECTION</div><h1 class="title">마케팅 사업부문의 다음 5년을 위한<br>3개 전문 CMO 체계</h1><p class="subtitle">기존 사업의 경영·성장을 전문영역별 CMO가 맡고, 기존 경영진의 신사업 축과 연결하는 구조</p></div><div><div class="brand">THE SMC · PEOPLE TEAM</div><div class="page">01 / 03</div></div></div>
+    <div class="p1-layout">
+      <div class="north">
+        <div><div class="mini">WHY NOW</div><h2>소셜 콘텐츠의 강점을<br>더 큰 마케팅 과제로 확장</h2><p>IMC · PR & Creator Relations · Data 세 전문성이 함께 작동해야 고객의 브랜드 방향, 관심과 신뢰, 측정 가능한 성과를 하나의 사업으로 연결할 수 있습니다.</p></div>
+        <div class="goal"><b>2027—2031 · 5년 경영 파트너십</b><p>단기 채용이 아니라 각 전문영역의 전략·실행 기준을 만들고, 성공 경험을 조직 역량으로 남기는 리더 영입.</p></div>
+      </div>
+      <div class="axis-wrap">
+        <div class="axis">
+          <div class="axis-card"><div class="tag">EXISTING LEADERSHIP</div><h3>신사업의 구축과 확장</h3><p><b>LENS · IMN · Commerce</b><br>새로운 기술·미디어·사업 기반 구축</p></div>
+          <div class="plus">+</div>
+          <div class="axis-card"><div class="tag">NEW MARKETING LEADERSHIP</div><h3>마케팅부문의 경영과 성장</h3><p><b>3 CMO × 10여 개 조직 리더</b><br>고객 제안 · 조직 역량 · 실행 품질 · 수익성 강화</p></div>
+        </div>
+        <div class="bridge"><b>두 경영 축을 연결하는 공통 목표</b><span>고객 × 콘텐츠 × 데이터 × 사업기회</span></div>
+        <div class="cmo-row">
+          <div class="cmo imc"><div class="n">01 · IMC</div><h4>종합 마케팅 경쟁력</h4><p>브랜드 전략부터 콘텐츠·크리에이터·미디어까지 하나의 캠페인으로 연결</p></div>
+          <div class="cmo pr"><div class="n">02 · PR & CR</div><h4>신뢰와 확산</h4><p>기업·브랜드 메시지를 PR과 Creator Relations로 확장</p></div>
+          <div class="cmo data"><div class="n">03 · DATA</div><h4>측정 가능한 성과</h4><p>콘텐츠·미디어·전환을 데이터와 수익성 관점으로 연결</p></div>
+        </div>
+        <div class="pillbar"><span class="pill">15년+ 전문성</span><span class="pill">리더와 함께 문제 해결</span><span class="pill">고객·조직·사업 관점</span><span class="pill">성과를 조직 역량으로 내재화</span></div>
+        <div class="offer-strip">
+          <div class="offer-item"><span class="label">TARGET JOINING</span><strong>2026년 겨울 ~ 2027년 봄</strong></div>
+          <div class="offer-item"><span class="label">COMPENSATION</span><strong>1.5억+ 경력별 협의 · 성과 인센티브 별도</strong></div>
+          <div class="offer-item"><span class="label">INTERVIEW</span><strong>1차 리더 면접 → 2차 대표 면접 → 처우 협의</strong></div>
+        </div>
+      </div>
     </div>
-  </header>
+  </section>
 
-  <div class="viewport">
-    <div class="track" id="track">
-
-      <!-- 0 · COVER -->
-
-      <!-- 1 · 채용 프로세스 -->
-      <section class="slide" aria-label="CEO Office 전형 취소">
-        <div class="slide-inner">
-          <div class="eyebrow"><i></i>Agenda 01</div>
-          <h2>CEO Office 면접 진행 — 황태민님 전형 취소 <span class="tag alert">종결</span></h2>
-          <p class="dek">과제·레퍼런스 체크 진행 중 후보자 본인이 채용 전형 취소를 희망했습니다.</p>
-
-          <div class="grid g2" style="align-items:start">
-            <div class="panel lift">
-              <h3>경과</h3>
-              <div class="rail">
-                <div class="step">
-                  <span class="when">지원</span>
-                  <div class="what"><b>홍보 기획자 포지션</b><small>최초 지원 포지션</small></div>
-                </div>
-                <div class="step">
-                  <span class="when">1차 면접</span>
-                  <div class="what"><b>홍보 기획자 면접 진행</b><small>김소연SM</small></div>
-                </div>
-                <div class="step">
-                  <span class="when">포지션 전환</span>
-                  <div class="what"><b>CEO Office 포지션 제안</b><small>면접 이후 포지션 전환 제안</small></div>
-                </div>
-                <div class="step">
-                  <span class="when">2차 면접</span>
-                  <div class="what"><b>CEO Office 면접 진행</b><small>대표님 · 이은희D · 김소연SM</small></div>
-                </div>
-                <div class="step">
-                  <span class="when">검증 요청</span>
-                  <div class="what"><b>과제 + 레퍼런스 체크 요청</b></div>
-                </div>
-                <div class="step is-stop">
-                  <span class="when">종결</span>
-                  <div class="what"><b>후보자 전형 취소 희망</b><small>본인 결정으로 종결</small></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="stack">
-              <div class="panel flag-alert">
-                <h3>취소 사유</h3>
-                <ul class="tick">
-                  <li>기존 SM엔터테인먼트에서 수행한 <b>C-level / 대내외 VIP 의전 업무</b>에 대한 부담감</li>
-                  <li>CEO Office 포지션 제안을 두고 고민한 끝에 <b>채용 취소로 결정</b></li>
-                  <li><b>레퍼런스 체크·과제 등 전형상의 이슈는 아님</b></li>
-                </ul>
-              </div>
-              <div class="panel flag-hold">
-                <h3>대표님 확인 필요</h3>
-                <ul class="tick q">
-                  <li>후보자와 별개로 <b>정규 TO 채용 의사</b> 확인</li>
-                  <li>필요 시 <b>정규 TO 오픈 → 이력서 서칭</b></li>
-                </ul>
-              </div>
-
-              <div class="panel optional-jd">
-                <h3>예상 JD <span class="tag mute">과제 기반 추정</span></h3>
-                <ul class="tick">
-                  <li><b>미션</b> — 대표 어젠다를 실행 단계로 옮기고 완결까지 추적</li>
-                  <li><b>운영 · 실행</b> — 의사결정 사항 실행 관리, 경영 회의체 운영 및 후속 팔로업</li>
-                  <li><b>사업부 소통</b> — 부문 간 조율, 진행 상황 취합, 병목 해소</li>
-                  <li><b>추진력</b> — 장기 과제를 끝까지 끌고 간 경험, C-level 커뮤니케이션</li>
-                </ul>
-                <p class="note" style="margin-top:10px">대표님 과제 문항(12개월 성과 설계 · 운영·실행 · 사업부 소통 · 추진력) 기반 추정</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="slide" aria-label="채용 프로세스">
-        <div class="slide-inner">
-          <div class="eyebrow"><i></i>Agenda 02</div>
-          <h2 style="margin-bottom:clamp(18px, 2.6vh, 28px)">채용 프로세스</h2>
-
-          <div class="flow-wrap">
-            <div class="flow">
-              <div class="phase gate">
-                <div class="ph-head"><span class="ph-no">STEP 01</span><span class="gate-tag">승인</span></div>
-                <h4>TO 확정</h4>
-                <ol>
-                  <li>사업부 TO 요청 상신</li>
-                  <li>피플팀 TO 승인<small>채용 사유 · 적합성 · 채용 조건 · 긴급도 확인</small></li>
-                </ol>
-              </div>
-
-              <div class="phase">
-                <div class="ph-head"><span class="ph-no">STEP 02</span></div>
-                <h4>공고 게시</h4>
-                <ol>
-                  <li>사업부별 공고 작성<small>포지션별 JD 확정</small></li>
-                  <li>공고 게시<small>자사 커리어 페이지 · 사람인 · 잡코리아 (중요도에 따라 리멤버)</small></li>
-                </ol>
-                <a class="sample" href="https://careers.thesmc.co.kr/ko/o/234471" target="_blank" rel="noopener">공고 예시 — AE(경력) / 브랜드캠페인 ↗</a>
-              </div>
-
-              <div class="phase wide">
-                <div class="ph-head"><span class="ph-no">STEP 03</span><span class="way-tag">2-WAY</span></div>
-                <h4>이력서 확보</h4>
-                <div class="twoway">
-                  <div class="way">
-                    <b>인입</b>
-                    지원 이력서<small>피플팀 1차 검토</small>
-                  </div>
-                  <div class="way">
-                    <b>서칭</b>
-                    잡포털 서칭<small>피플팀 다이렉트 소싱</small>
-                  </div>
-                </div>
-                <div class="merge">사업부 전달</div>
-                <div class="mini">
-                  <div><em>잡포털</em>사람인 · 잡코리아 · 리멤버 · 링크드인<br>캐치 · 링커리어 · 미디어잡 등 활용</div>
-                  <div><em>1차 검토 기준</em>JD 필수 요건 · 경력·직급 매칭 · 직무 성과·포트폴리오</div>
-                </div>
-              </div>
-
-              <div class="phase row-end">
-                <div class="ph-head"><span class="ph-no">STEP 04</span></div>
-                <h4>서류 검토</h4>
-                <ol>
-                  <li>사업부 서류 검토</li>
-                  <li>면접 진행 여부 판단<small>사업부</small></li>
-                </ol>
-              </div>
-
-              <div class="phase">
-                <div class="ph-head"><span class="ph-no">STEP 05</span></div>
-                <h4>면접 전형</h4>
-                <ol>
-                  <li>면접 진행<small>최대 2차 · 필요시 과제 전형 병행</small></li>
-                  <li>면접 결과 검토<small>피플팀</small></li>
-                </ol>
-                <div class="chips">
-                  <span>잡핏</span><span>컬쳐핏</span><span>AI 역량</span><span>처우 요건</span>
-                </div>
-              </div>
-
-              <div class="phase gate optional">
-                <div class="ph-head"><span class="ph-no">STEP 06</span><span class="way-tag">직급별</span></div>
-                <h4>레퍼런스 체크</h4>
-                <ol>
-                  <li>후보자 사전 동의 확보</li>
-                  <li>SM 이상 · D · C-level · 경영 특수직무<small>필수 진행</small></li>
-                  <li>그 외 직급<small>필요 시 진행</small></li>
-                </ol>
-                <p class="note" style="margin:auto 0 0">대표님 컨펌 전 완료</p>
-              </div>
-
-              <div class="phase ceo">
-                <div class="ph-head"><span class="ph-no">STEP 07</span><span class="gate-tag">대표님 컨펌</span></div>
-                <h4>입사 컨펌 보고</h4>
-                <ol>
-                  <li>사업부 평가 의견 정리</li>
-                  <li><b>최종 제안 연봉 확정</b></li>
-                  <li>대표님 보고 · 컨펌<small>컨펌 후 처우 제안 진행</small></li>
-                </ol>
-                <a class="sample" href="https://to-dashboard.vercel.app/dashboard/archive" target="_blank" rel="noopener">입사 컨펌 보고 화면 ↗</a>
-              </div>
-
-              <div class="phase">
-                <div class="ph-head"><span class="ph-no">STEP 08</span></div>
-                <h4>처우 협의</h4>
-                <ol>
-                  <li>처우 협의 · 오퍼 수락 여부 확인</li>
-                  <li>입사일 확정</li>
-                </ol>
-              </div>
-
-              <div class="phase">
-                <div class="ph-head"><span class="ph-no">STEP 09</span></div>
-                <h4>입사 · 온보딩</h4>
-                <ol>
-                  <li>입사 안내 · 온보딩 진행</li>
-                  <li>TO 클로징<small>충원 완료 처리 · TO 대시보드 반영</small></li>
-                </ol>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <section class="slide" aria-label="사업부별 TO 현황">
-        <div class="slide-inner">
-          <div class="eyebrow"><i></i>Agenda 03 — 1</div>
-          <h2 style="margin-bottom:clamp(18px, 2.6vh, 28px)">사업부별 TO 현황</h2>
-
-          <div class="tiles" style="margin-bottom:12px;grid-template-columns:repeat(2, minmax(150px, 260px)) 1fr">
-            <div class="tile">
-              <span class="lab">현재원</span>
-              <div class="big">497<em>명</em></div>
-            </div>
-            <div class="tile key">
-              <span class="lab">진행중인 TO</span>
-              <div class="big">21<em>건</em></div>
-            </div>
-            <div style="display:flex;justify-content:flex-end;align-items:center">
-              <a class="cta" href="https://to-dashboard.vercel.app/dashboard/active" target="_blank" rel="noopener">
-                채용 TO 대시보드 열기
-                <span class="url">to-dashboard.vercel.app</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="grid g2" style="align-items:start">
-              <div class="table-wrap">
-                <table class="to">
-                  <thead>
-                    <tr><th>사업부</th><th class="n">현재원</th><th class="n">진행 TO</th></tr>
-                  </thead>
-                  <tbody>
-                    <tr><td class="dept">소셜엠씨</td><td class="n">93</td><td class="n"><div class="bar"><span class="track"><i style="width:20%"></i></span><span class="v">1</span></div></td></tr>
-                    <tr><td class="dept">데이드</td><td class="n">43</td><td class="n"><div class="bar"><span class="track"><i style="width:60%"></i></span><span class="v">3</span></div></td></tr>
-                    <tr><td class="dept">브랜드그로스</td><td class="n">35</td><td class="n"><div class="bar zero"><span class="track"></span><span class="v">–</span></div></td></tr>
-                    <tr><td class="dept">공공사업부</td><td class="n">21</td><td class="n"><div class="bar"><span class="track"><i style="width:20%"></i></span><span class="v">1</span></div></td></tr>
-                    <tr><td class="dept">광고사업 1본부</td><td class="n">33</td><td class="n"><div class="bar zero"><span class="track"></span><span class="v">–</span></div></td></tr>
-                    <tr><td class="dept">광고사업 2본부</td><td class="n">47</td><td class="n"><div class="bar"><span class="track"><i style="width:40%"></i></span><span class="v">2</span></div></td></tr>
-                    <tr><td class="dept">광고사업 3본부</td><td class="n">25</td><td class="n"><div class="bar"><span class="track"><i style="width:40%"></i></span><span class="v">2</span></div></td></tr>
-                    <tr><td class="dept">BX본부</td><td class="n">17</td><td class="n"><div class="bar zero"><span class="track"></span><span class="v">–</span></div></td></tr>
-                    <tr><td class="dept">세마리토끼</td><td class="n">21</td><td class="n"><div class="bar"><span class="track"><i style="width:40%"></i></span><span class="v">2</span></div></td></tr>
-                  </tbody>
-                </table>
-              </div>
-              <div class="table-wrap">
-                <table class="to">
-                  <thead>
-                    <tr><th>사업부</th><th class="n">현재원</th><th class="n">진행 TO</th></tr>
-                  </thead>
-                  <tbody>
-                    <tr><td class="dept">콘텐츠커머스</td><td class="n">11</td><td class="n"><div class="bar"><span class="track"><i style="width:20%"></i></span><span class="v">1</span></div></td></tr>
-                    <tr><td class="dept">미래전략</td><td class="n">34</td><td class="n"><div class="bar"><span class="track"><i style="width:100%"></i></span><span class="v">5</span></div></td></tr>
-                    <tr><td class="dept">팀민트</td><td class="n">37</td><td class="n"><div class="bar"><span class="track"><i style="width:20%"></i></span><span class="v">1</span></div></td></tr>
-                    <tr><td class="dept">AI Studio</td><td class="n">0</td><td class="n"><div class="bar zero"><span class="track"></span><span class="v">–</span></div></td></tr>
-                    <tr><td class="dept">AI Labs</td><td class="n">13</td><td class="n"><div class="bar zero"><span class="track"></span><span class="v">–</span></div></td></tr>
-                    <tr><td class="dept">쇼츠비</td><td class="n">6</td><td class="n"><div class="bar zero"><span class="track"></span><span class="v">–</span></div></td></tr>
-                    <tr><td class="dept">CEO Office</td><td class="n">9</td><td class="n"><div class="bar"><span class="track"><i style="width:20%"></i></span><span class="v">1</span></div></td></tr>
-                    <tr><td class="dept">경영부문</td><td class="n">52</td><td class="n"><div class="bar"><span class="track"><i style="width:40%"></i></span><span class="v">2</span></div></td></tr>
-                  </tbody>
-                </table>
-              </div>
-          </div>
-
-          <div class="panel flag-hold" style="margin-top:14px">
-            <h3>TO 없는 조직 · 선제적 서치</h3>
-            <ul class="tick q">
-              <li>가희실장 <b>출산 예정</b> — 공백 대비 사전 서치</li>
-              <li>재진실장 — <b>PT 제안 역량 있는 매니저급</b> 확보 니즈</li>
-              <li>피플팀 <b>사업부 월간 리뷰 참석 예정</b> — 중간관리자 필요한 사업부 니즈 캐치 후 이력서 전달 예정</li>
-            </ul>
-            <p class="note" style="margin-top:8px">TO 미등재 상태에서 인재 풀만 먼저 확보 — 필요 시점에 즉시 전형 착수</p>
-          </div>
-        </div>
-      </section>
-
-      <section class="slide" aria-label="콜마 채용">
-        <div class="slide-inner">
-          <div class="eyebrow"><i></i>Agenda 03 — 2</div>
-          <h2 style="margin-bottom:clamp(16px, 2.2vh, 22px)">콜마 채용</h2>
-
-          <div class="panel statline" style="margin-bottom:16px">
-            <span class="stat"><em>공고 오픈</em><b>8월 25일</b></span>
-            <span class="stat"><em>공고 지원자</em><b>1명</b></span>
-          </div>
-
-          <div class="grid g2" style="align-items:start">
-            <div class="stack">
-              <div class="panel lift">
-                <h3>채용 정보 · 총 4명</h3>
-                <div class="table-wrap" style="border:0">
-                  <table>
-                    <thead>
-                      <tr><th>직급</th><th class="n">인원</th><th>구분</th></tr>
-                    </thead>
-                    <tbody>
-                      <tr><td>SM</td><td class="n">1</td><td><span class="tag">리드급 1순위</span></td></tr>
-                      <tr><td>M</td><td class="n">1</td><td><span class="tag">리드급 1순위</span></td></tr>
-                      <tr><td>P</td><td class="n">2</td><td><span class="tag mute">주니어 · 후속</span></td></tr>
-                    </tbody>
-                  </table>
-                </div>
-                <p class="note" style="margin-top:10px">리드급(SM · M) 채용 이후 주니어 2명 채용 예정</p>
-              </div>
-
-              <div class="panel">
-                <h3>면접관</h3>
-                <div class="rail">
-                  <div class="step">
-                    <span class="when">1차</span>
-                    <div class="what"><b>최나진D · 김웅지D</b></div>
-                  </div>
-                  <div class="step">
-                    <span class="when">2차</span>
-                    <div class="what"><b>김용태 대표님 · 최나진D</b></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="stack">
-              <div class="panel flag">
-                <h3>소싱 투트랙</h3>
-                <ul class="tick">
-                  <li><b>Track 1 · 다이렉트 소싱</b>
-                    <ul class="sub"><li>피플팀에서 이력서 서칭 후 현업에 전달 중</li></ul>
-                  </li>
-                  <li><b>Track 2 · 네트워크 풀</b>
-                    <ul class="sub">
-                      <li>최나진D 이전에 당사에서 함께 근무했던 인원 및 추천 인재 풀</li>
-                      <li><b>차주 최나진D 미팅 예정</b></li>
-                    </ul>
-                  </li>
-                </ul>
-              </div>
-
-              <div class="panel">
-                <h3>타겟 일정</h3>
-                <div class="rail">
-                  <div class="step">
-                    <span class="when">9월 중</span>
-                    <div class="what"><b>인재 섭외</b><small>SM · M 후보 확정, 전형 진행</small></div>
-                  </div>
-                  <div class="step is-next">
-                    <span class="when">10월 중</span>
-                    <div class="what"><b>입사 (희망)</b><small>P 2명은 SM · M 확정 후 순차 진행</small></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
+  <section class="slide" data-slide="1">
+    <div class="top"><div><div class="kicker">POSITION SUMMARY</div><h1 class="title">외부 공개 JD</h1><p class="subtitle"></p></div><div><div class="brand">THE SMC · PEOPLE TEAM</div><div class="page">02 / 03</div></div></div>
+    <div class="common"><div><b>15+ YEARS</b><span>관련 경력 15년 이상 · 고객·조직·사업을 이끈 경험</span></div><div><b>LEAD WITH LEADERS</b><span>사업부 리더와 고객 제안·인재 육성·실행·손익 문제 해결</span></div><div><b>BUILD FOR FIVE YEARS</b><span>개인의 성공을 조직이 반복할 수 있는 방식으로 내재화</span></div></div>
+    <div class="jdgrid">
+      <article class="jd imc">
+        <div class="jd-head"><div class="ey">INTEGRATED MARKETING COMMUNICATIONS</div><h3>IMC</h3><p class="catch">소셜 콘텐츠의 강점을<br>브랜드의 종합 마케팅 경쟁력으로.</p><p class="who"><b>Target Profile</b><br>AE 출발 → 브랜드 전략·IMC 캠페인 → 브랜드 사업·예산 책임 경험</p><div class="target-example"><span class="label">PROFILE EXAMPLE</span><p>예: 제일기획 등 종합광고대행사 경험 후 브랜드의 마케팅 조직에서 사업과 예산을 책임져 온 경력.</p></div></div>
+        <div class="headlines"><div class="headline"><span class="dot"></span><span>종합 마케팅 기획·고객 제안 역량 고도화</span></div><div class="headline"><span class="dot"></span><span>브랜드 전략·콘텐츠·크리에이터·미디어 통합</span></div><div class="headline"><span class="dot"></span><span>주요 PT·고객 협의 및 AE·기획 리더 육성</span></div></div>
+        <button class="toggle" onclick="toggleDetail(this)">상세 JD 보기 <span>＋</span></button>
+        <div class="detail"><div class="detail-inner"><h5>함께 맡을 일</h5><ul><li>소셜미디어 중심 사업부의 종합 마케팅 기획과 고객 제안 역량을 높입니다.</li><li>브랜드 전략, 핵심 메시지, 소셜 콘텐츠, 크리에이터 협업과 매체 계획을 하나의 캠페인으로 연결합니다.</li><li>사업부 리더들과 주요 제안·경쟁 PT·고객 협의를 함께하며 AE와 기획 리더를 육성합니다.</li><li>기존 고객의 더 큰 마케팅 과제를 발굴하고 통합 캠페인과 지속 운영 계약으로 사업을 넓힙니다.</li></ul><div class="outcome"><b>확장 방향</b><br>LENS·IMN·콘텐츠 실행력을 활용해 <b>기획에서 실행까지 연결되는 IMC 사업</b>을 리드</div></div></div>
+      </article>
+      <article class="jd pr">
+        <div class="jd-head"><div class="ey">PUBLIC RELATIONS & CREATOR RELATIONS</div><h3>PR & CR</h3><p class="catch">기업의 신뢰를 만드는 기획을<br>크리에이터와 소셜 콘텐츠로 확장.</p><p class="who"><b>Target Profile</b><br>PR 메시지·미디어 관계 → 브랜드 기업·제품 커뮤니케이션 리딩 경험</p><div class="target-example"><span class="label">PROFILE EXAMPLE</span><p>예: 프레인 등 PR 전문회사 경험 후 브랜드의 PR·커뮤니케이션 조직에서 성과를 만들어 온 경력.</p></div></div>
+        <div class="headlines"><div class="headline"><span class="dot"></span><span>숏폼·스튜디오·인플루언서 기반 CR 사업 강화</span></div><div class="headline"><span class="dot"></span><span>기업·브랜드 메시지의 크리에이터 콘텐츠화</span></div><div class="headline"><span class="dot"></span><span>PR × CR 신규 패키지 및 운영 품질 체계 구축</span></div></div>
+        <button class="toggle" onclick="toggleDetail(this)">상세 JD 보기 <span>＋</span></button>
+        <div class="detail"><div class="detail-inner"><h5>함께 맡을 일</h5><ul><li>소셜미디어 알고리즘을 고려한 숏폼, 크리에이터 스튜디오, 인플루언서 콘텐츠를 CR 사업으로 강화합니다.</li><li>기업·브랜드 메시지를 크리에이터별 관점과 콘텐츠 형식에 맞게 발전시키고 협업의 기획·운영 품질을 높입니다.</li><li>기존 PR과 CR을 연결해 기업·산업 스토리, 신제품 론칭, 상시 커뮤니케이션 패키지를 만듭니다.</li><li>콘텐츠 리더들과 메시지 정확성, 브랜드 적합성, 발행·검수 체계를 발전시킵니다.</li></ul><div class="outcome"><b>확장 방향</b><br>LENS·IMN과 연결해 <b>PR의 신뢰와 CR의 콘텐츠 실행력을 결합한 사업</b>을 리드</div></div></div>
+      </article>
+      <article class="jd data">
+        <div class="jd-head"><div class="ey">DATA & PERFORMANCE MARKETING</div><h3>Data</h3><p class="catch">콘텐츠와 미디어의 힘을<br>측정 가능한 사업 성과로 연결.</p><p class="who"><b>Target Profile</b><br>퍼포먼스 → 데이터·매체·전환 → 브랜드 매출 성장·마케팅 손익 책임 경험</p><div class="target-example"><span class="label">PROFILE EXAMPLE</span><p>예: 에코마케팅 등 퍼포먼스 전문회사 경험 후 브랜드에서 성장 전략과 마케팅 손익을 관리해 온 경력.</p></div></div>
+        <div class="headlines"><div class="headline"><span class="dot"></span><span>퍼포먼스·미디어 조직의 전략·측정 역량 고도화</span></div><div class="headline"><span class="dot"></span><span>콘텐츠를 소재 실험·매체 집행·전환 개선으로 연결</span></div><div class="headline"><span class="dot"></span><span>고객 KPI·실험 체계 및 양측 수익성 관리</span></div></div>
+        <button class="toggle" onclick="toggleDetail(this)">상세 JD 보기 <span>＋</span></button>
+        <div class="detail"><div class="detail-inner"><h5>함께 맡을 일</h5><ul><li>퍼포먼스 마케팅·미디어렙 운영 조직의 전략, 매체 운영, 데이터 해석과 성과 측정 역량을 높입니다.</li><li>숏폼·크리에이터 콘텐츠 강점을 광고 소재 실험, 매체 집행과 전환 개선으로 연결합니다.</li><li>고객 사업 목표에 맞는 지표와 실험 체계를 세우고 매체 효율과 고객·회사 양측 수익성을 함께 살핍니다.</li><li>사업부 리더들과 성과 개선 과제를 해결하며 콘텐츠·미디어·커머스가 결합한 사업을 확대합니다.</li></ul><div class="outcome"><b>확장 방향</b><br>LENS·IMN 인사이트와 Commerce를 연결해 <b>콘텐츠가 사업 성과를 만드는 방식</b>을 검증·확장</div></div></div>
+      </article>
     </div>
-  </div>
+    
+  </section>
 
-  <nav class="navbar" aria-label="슬라이드 이동">
-    <div class="dots" id="dots"></div>
-    <div class="navmeta">
-      <span id="counter">01 / 07</span>
-      <span class="slidename" id="slidename"></span>
-      <span class="arrows">
-        <button id="prev" aria-label="이전 슬라이드">&#8592;</button>
-        <button id="next" aria-label="다음 슬라이드">&#8594;</button>
-      </span>
+  <section class="slide" data-slide="2">
+    <div class="top"><div><div class="kicker">PEOPLE TEAM OPERATING PLAN</div><h1 class="title">피플팀 CMO 채용 실행안</h1><p class="subtitle">3개 포지션을 동시에 열고, 기본 채널에서 풀을 확보한 뒤 C-Level 특성에 맞춰 유료 채널과 직접 탐색을 확장</p></div><div><div class="brand">THE SMC · PEOPLE TEAM</div><div class="page">03 / 03</div></div></div>
+    <div class="ops">
+      <div>
+        <div class="channel-stack">
+          <div class="channel"><div><div class="name">사람인 · 잡코리아</div><span class="badge basic">기본 게시</span></div><p>3개 포지션 동시 공개. 외부 지원자 유입을 넓히는 기본 채널로 운영합니다.</p><div class="cost">추가 수수료<strong>—</strong></div></div>
+          <div class="channel"><div><div class="name">리멤버</div><span class="badge paid">유료 적극 활용</span></div><p>현재 이용권 <b>1건 잔여</b>. C-Level 후보 확보가 필요한 경우 추가 구매해 후보풀을 최대한 확대합니다.</p><div class="cost">채용 1명 기준<strong>약 400만원</strong></div></div>
+          <div class="channel"><div><div class="name">LinkedIn</div><span class="badge direct">직접 소싱</span></div><p>지원 유입에만 의존하지 않고 타겟 회사·경력 기반으로 후보자를 지속 탐색하고 직접 접촉합니다.</p><div class="cost">운영 방식<strong>상시 탐색</strong></div></div>
+          <div class="channel optional"><div><div class="name">원티드</div><span class="badge decision">추가 활용 검토</span></div><p>기본 운영 채널의 후보풀과 지원 품질을 먼저 확인한 뒤, 추가 유입이 필요한 경우 포지션별 활용 여부를 검토합니다.</p><div class="cost">연봉의 7%<strong>1,050만원</strong><small>연봉 1.5억 기준</small></div></div>
+        </div>
+        <div class="flow"><span>① 사람인·잡코리아 오픈</span><i>→</i><span>② 리멤버 병행</span><i>→</i><span>③ LinkedIn 직접 소싱</span><i>→</i><span>④ 필요 시 원티드 추가</span></div>
+        <div class="selection-process">
+          <div class="selection-title"><span>SELECTION PROCESS</span><b>면접 전형</b></div>
+          <div class="selection-steps">
+            <div class="selection-step"><span class="step-no">01</span><div><b>서류 검토</b><p>피플팀 및 포지션 적합성 확인</p></div></div>
+            <i>→</i>
+            <div class="selection-step primary"><span class="step-no">02</span><div><b>1차 면접</b><p>최나진D · 김연지D · 김웅지D · 이승준D · 김소연SM</p></div></div>
+            <i>→</i>
+            <div class="selection-step"><span class="step-no">03</span><div><b>2차 면접</b><p>대표이사</p></div></div>
+            <i>→</i>
+            <div class="selection-step"><span class="step-no">04</span><div><b>처우 협의</b><p>최종 합류 조건 협의</p></div></div>
+          </div>
+        </div>
+        <div class="note">※ 채널별 실제 과금 조건은 계약·상품 조건에 따라 달라질 수 있으며, 본 페이지는 현재 피플팀 운영 판단을 위한 기준 금액입니다.</div>
+      </div>
+      <aside class="decision-box">
+        <div class="ey">DECISION POINT</div><h3>원티드<br>추가 활용 검토</h3>
+        <div class="money">
+          <div class="money-row"><span>리멤버 · 추가 구매 시</span><b>약 400만원 / 1명</b><small>잔여 이용권 1건 우선 활용</small></div>
+          <div class="money-row"><span>원티드 · 연봉 1.5억원 기준</span><b>1,050만원 / 1명</b><small>연봉 × 7%</small></div>
+          <div class="money-row"><span>비용 차이</span><b>약 650만원</b><small>동일 1명 채용 가정 시</small></div>
+        </div>
+      </aside>
     </div>
-  </nav>
+  </section>
 </div>
-
-<div class="sheet" id="sheet" hidden>
-  <div class="sheet-back" data-close></div>
-  <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
-    <button class="sheet-x" type="button" data-close aria-label="닫기">✕</button>
-    <div class="sheet-body" id="sheet-body"></div>
-  </div>
-</div>
-
-
+<div class="dots"><button class="active" onclick="go(0)"></button><button onclick="go(1)"></button><button onclick="go(2)"></button></div>
+<div class="nav"><button onclick="prev()">←</button><button onclick="next()">→</button></div>
 <script>
-  (function () {
-    var track = document.getElementById('track');
-    var slides = Array.prototype.slice.call(track.children);
-    var dotsWrap = document.getElementById('dots');
-    var counter = document.getElementById('counter');
-    var nameEl = document.getElementById('slidename');
-    var prev = document.getElementById('prev');
-    var next = document.getElementById('next');
-    var names = ['CEO Office 전형 취소', '채용 프로세스', '사업부별 TO 현황', '콜마 채용'];
-    var i = 0;
-
-    slides.forEach(function (s, n) {
-      var b = document.createElement('button');
-      b.className = 'dot';
-      b.type = 'button';
-      b.setAttribute('aria-label', (n + 1) + '. ' + (names[n] || ''));
-      b.addEventListener('click', function () { go(n); });
-      dotsWrap.appendChild(b);
-    });
-    var dots = Array.prototype.slice.call(dotsWrap.children);
-
-    function pad(n) { return (n < 10 ? '0' : '') + n; }
-
-    function go(n) {
-      i = Math.max(0, Math.min(slides.length - 1, n));
-      track.style.transform = 'translateX(' + (-i * 100) + '%)';
-      dots.forEach(function (d, k) { d.setAttribute('aria-current', k === i ? 'true' : 'false'); });
-      counter.textContent = pad(i + 1) + ' / ' + pad(slides.length);
-      nameEl.textContent = names[i] || '';
-      prev.disabled = i === 0;
-      next.disabled = i === slides.length - 1;
-      slides.forEach(function (s, k) {
-        s.setAttribute('aria-hidden', k === i ? 'false' : 'true');
-        if (k === i) { s.scrollTop = 0; }
-      });
-    }
-
-    prev.addEventListener('click', function () { go(i - 1); });
-    next.addEventListener('click', function () { go(i + 1); });
-
-    /* ---- 상세 시트 ---- */
-    var sheet = document.getElementById('sheet');
-    var sheetBody = document.getElementById('sheet-body');
-    var lastFocus = null;
-
-    function openSheet(key) {
-      var tpl = document.getElementById('tpl-' + key);
-      if (!tpl) { return; }
-      sheetBody.innerHTML = '';
-      sheetBody.appendChild(tpl.content.cloneNode(true));
-      lastFocus = document.activeElement;
-      sheet.hidden = false;
-      var x = sheet.querySelector('.sheet-x');
-      if (x) { x.focus(); }
-    }
-    function closeSheet() {
-      sheet.hidden = true;
-      sheetBody.innerHTML = '';
-      if (lastFocus && lastFocus.focus) { lastFocus.focus(); }
-    }
-    function sheetOpen() { return !sheet.hidden; }
-
-    document.addEventListener('click', function (e) {
-      var opener = e.target.closest('[data-open]');
-      if (opener) { openSheet(opener.getAttribute('data-open')); return; }
-      if (e.target.closest('[data-close]')) { closeSheet(); }
-    });
-
-    document.addEventListener('keydown', function (e) {
-      if (sheetOpen()) {
-        if (e.key === 'Escape') { closeSheet(); }
-        return;
-      }
-      if (e.key === 'ArrowRight' || e.key === 'PageDown') { go(i + 1); }
-      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { go(i - 1); }
-      else if (e.key === 'Home') { go(0); }
-      else if (e.key === 'End') { go(slides.length - 1); }
-    });
-
-    var x0 = null, y0 = null;
-    track.addEventListener('touchstart', function (e) {
-      x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
-    }, { passive: true });
-    track.addEventListener('touchend', function (e) {
-      if (x0 === null) { return; }
-      var dx = e.changedTouches[0].clientX - x0;
-      var dy = e.changedTouches[0].clientY - y0;
-      if (Math.abs(dx) > 56 && Math.abs(dx) > Math.abs(dy)) { go(dx < 0 ? i + 1 : i - 1); }
-      x0 = null; y0 = null;
-    });
-
-    go(0);
-  })();
+let current=0;const slides=[...document.querySelectorAll('.slide')],dots=[...document.querySelectorAll('.dots button')];
+function go(n){current=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,i)=>s.classList.toggle('active',i===current));dots.forEach((d,i)=>d.classList.toggle('active',i===current));}
+function next(){go(current+1)} function prev(){go(current-1)}
+function toggleDetail(btn){const d=btn.nextElementSibling;const open=d.classList.toggle('open');btn.querySelector('span').textContent=open?'−':'＋';btn.childNodes[0].nodeValue=open?'상세 JD 닫기 ':'상세 JD 보기 ';}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='PageDown')next();if(e.key==='ArrowLeft'||e.key==='PageUp')prev();if(e.key==='Home')go(0);if(e.key==='End')go(slides.length-1)});
 </script>
+
+<style>
+/* Selection process */
+.selection-process{margin-top:16px;border-top:1px solid var(--ink);border-bottom:1px solid var(--line-light);padding:14px 0 15px}
+.selection-title{display:flex;align-items:baseline;gap:12px;margin-bottom:12px}
+.selection-title span{font-size:10px;letter-spacing:.13em;color:var(--gray-2)}
+.selection-title b{font-size:16px}
+.selection-steps{display:grid;grid-template-columns:.8fr auto 1.7fr auto .8fr auto .9fr;align-items:stretch;gap:8px}
+.selection-steps>i{font-style:normal;color:var(--gray-3);display:flex;align-items:center;justify-content:center}
+.selection-step{border-left:1px solid var(--line-light);padding:8px 10px;display:flex;gap:9px;min-width:0}
+.selection-step.primary{border-left:2px solid var(--ink)}
+.selection-step .step-no{font-size:10px;color:var(--gray-2);padding-top:2px}
+.selection-step b{display:block;font-size:13px;margin-bottom:3px}
+.selection-step p{margin:0;font-size:11px;line-height:1.45;color:var(--gray-1)}
+@media(max-width:1100px){.selection-steps{grid-template-columns:1fr}.selection-steps>i{display:none}.selection-step{border-left:1px solid var(--line-light)}}
+</style>
+</body>
+</html>
+<style>
+/* First slide lightened for executive review */
+.slide[data-slide="0"]{background:var(--ivory);color:var(--ink)}
+.slide[data-slide="0"]::after{content:"";position:absolute;right:-2%;top:0;width:38%;height:100%;opacity:.20;background:repeating-linear-gradient(135deg,transparent 0 18px,#deded9 18px 19px);pointer-events:none}
+.slide[data-slide="0"] .top{border-bottom:1px solid var(--ink);padding-bottom:16px}
+.slide[data-slide="0"] .brand,.slide[data-slide="0"] .title{color:var(--ink)}
+.slide[data-slide="0"] .kicker,.slide[data-slide="0"] .subtitle,.slide[data-slide="0"] .page{color:var(--gray-2)}
+.slide[data-slide="0"] .north{border-right:1px solid var(--line-light)}
+.slide[data-slide="0"] .north .mini{color:var(--gray-2)}
+.slide[data-slide="0"] .north h2{color:var(--ink)}
+.slide[data-slide="0"] .north p{color:var(--gray-1)}
+.slide[data-slide="0"] .north .goal{border-top:1px solid var(--line-light)}
+.slide[data-slide="0"] .axis-card:last-child{border-left:1px solid var(--line-light)}
+.slide[data-slide="0"] .axis-card .tag{color:var(--gray-2)}
+.slide[data-slide="0"] .axis-card h3{color:var(--ink)}
+.slide[data-slide="0"] .axis-card p{color:var(--gray-1)}
+.slide[data-slide="0"] .bridge{border-top:1px solid var(--ink);border-bottom:1px solid var(--line-light);color:var(--ink)}
+.slide[data-slide="0"] .bridge span{color:var(--gray-2)}
+.slide[data-slide="0"] .cmo+.cmo{border-left:1px solid var(--line-light)}
+.slide[data-slide="0"] .cmo .n{color:var(--gray-2)}
+.slide[data-slide="0"] .cmo h4{color:var(--ink)}
+.slide[data-slide="0"] .cmo p{color:var(--gray-1)}
+.slide[data-slide="0"] .pill{color:var(--gray-2)}
+/* one restrained dark anchor instead of full black background */
+.slide[data-slide="0"] .north .goal{background:var(--ink);color:var(--ivory);padding:18px 20px;margin-right:4px}
+.slide[data-slide="0"] .north .goal b{color:var(--ivory)}
+.slide[data-slide="0"] .north .goal span,.slide[data-slide="0"] .north .goal p{color:var(--gray-3)}
+</style>
+<style>
+/* Visibility fix for light first slide */
+.slide[data-slide="0"] .axis-card p b{color:var(--ink)!important}
+.slide[data-slide="0"] .plus{color:var(--gray-2);border-color:var(--line-light)}
+.slide[data-slide="0"] .offer-item strong{color:var(--ink)}
+.slide[data-slide="0"] .offer-item .label{color:var(--gray-2)}
+.slide[data-slide="0"] .offer-strip{border-top-color:var(--ink);border-bottom-color:var(--line-light)}
+.slide[data-slide="0"] .north:not(:has(.goal:hover)){color:var(--ink)}
+</style>
